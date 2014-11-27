@@ -1,5 +1,8 @@
 extends layout
 
+block head
+  script(src='/assets/javascripts/angular.min.js')
+  script(src='/assets/javascripts/app/main.js')
+
 block content
-  h1= title
-  p Welcome to #{title}
+  div(ng-app='odinApp')
