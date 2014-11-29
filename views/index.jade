@@ -1,17 +1,22 @@
 extends layout
 
 block head
+  link(rel='stylesheet', href='/assets/semantic/semantic.min.css')
+  script(src='/assets/semantic/semantic.min.js')
   script(src='/assets/angular/angular.min.js')
   script(src='/assets/app/main.js')
-  link(rel='stylesheet', href='/assets/app/style.css')
 
 block content
   div(ng-app='odinApp')
     div(ng-controller='ItemsController')
-      div(class='new')
-        input(ng-model='item.title')
-        button(ng-click='addItem(item.title); item.title=""') Add
+      div(class='ui segment')
+        div(class='ui action input')
+          input(type='text' placeholder='Title...' ng-model='item.title')
+          div(class='ui primary button' ng-click='addItem(item.title); item.title=""')
+            i(class='plus icon')
+            | Add
 
-      div(class='items')
-        ul(ng-repeat='item in items')
-          li {{ item.title }}
+      div(class='ui basic segment')
+        div(class='ui card' ng-repeat='item in items')
+          div(class='content')
+            div(class='header') {{ item.title }}
