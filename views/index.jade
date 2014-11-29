@@ -1,8 +1,9 @@
 extends layout
 
 block head
-  script(src='/assets/javascripts/angular.min.js')
-  script(src='/assets/javascripts/app/main.js')
+  script(src='/assets/angular/angular.min.js')
+  script(src='/assets/app/main.js')
+  link(rel='stylesheet', href='/assets/app/style.css')
 
 block content
   div(ng-app='odinApp')
