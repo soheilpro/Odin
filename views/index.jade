@@ -6,3 +6,11 @@ block head
 
 block content
   div(ng-app='odinApp')
+    div(ng-controller='ItemsController')
+      div(class='new')
+        input(ng-model='item.title')
+        button(ng-click='addItem(item.title); item.title=""') Add
+
+      div(class='items')
+        ul(ng-repeat='item in items')
+          li {{ item.title }}
