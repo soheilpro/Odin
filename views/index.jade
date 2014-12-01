@@ -5,6 +5,7 @@ block head
   script(src='/assets/jquery/jquery-2.1.1.min.js')
   script(src='/assets/semantic/semantic.min.js')
   script(src='/assets/angular/angular.min.js')
+  script(src='/assets/underscore/underscore-min.js')
   script(src='/assets/app/main.js')
 
 block content
@@ -18,6 +19,19 @@ block content
             | Add
 
       div.ui.basic.segment
-        div.ui.card(ng-repeat='item in items')
-          div.content
-            div.header {{ item.title }}
+        div.ui.grid
+          div.four.wide.column(ng-repeat='state in states')
+            h3.ui.header {{ state.title }}
+            div.ui.divider
+            div.ui.card(ng-repeat='item in items | state: state')
+              div.content
+                div.header {{ item.title }}
+                br
+                div.ui.dropdown
+                  div.text {{ item.state.title }}
+                  i.dropdown.icon
+                  div.menu
+                    div.item(ng-repeat='state in states' ng-attr-data-value='{{ state.key }}' ng-click='item.state = state') {{ state.title }}
+                  //- TODO: Only act on the newly added dropdown
+                  script.
+                    $('.ui.dropdown').dropdown();
