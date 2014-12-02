@@ -12,11 +12,12 @@ block content
   div(ng-app='odinApp')
     div(ng-controller='ItemsController')
       div.ui.segment
-        div.ui.action.input
-          input(type='text' placeholder='Title...' ng-model='item.title')
-          div.ui.primary.button(ng-click='addItem(item.title); item.title=""')
-            i.plus.icon
-            | Add
+        form(ng-submit="addNewItem()")
+          div.ui.action.input
+            input(type='text' placeholder='Title...' ng-model='newItem.title')
+            div.ui.primary.button(ng-click='addNewItem()')
+              i.plus.icon
+              | Add
 
       div.ui.basic.segment
         div.ui.grid

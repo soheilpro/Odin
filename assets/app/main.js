@@ -14,11 +14,13 @@ odinApp.controller('ItemsController', ['$scope', function($scope) {
 
   $scope.items = [];
 
-  $scope.addItem = function(title) {
+  $scope.addNewItem = function() {
     this.items.push({
-      title: title,
+      title: this.newItem.title,
       state: this.states[0],
     });
+
+    this.newItem.title = "";
   };
 }])
 
