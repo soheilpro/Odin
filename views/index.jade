@@ -12,22 +12,35 @@ block content
   div(ng-app='odinApp')
     div(ng-controller='ItemsController')
       div.ui.segment
-        form(ng-submit="addNewItem()")
-          div.ui.action.input
-            input(type='text' placeholder='Title...' ng-model='newItem.title')
-            div.ui.primary.button(ng-click='addNewItem()')
-              i.plus.icon
-              | Add
+        div.ui.grid
+          div.eight.wide.column
+            form(ng-submit="addNewItem()")
+              div.ui.action.input
+                input(type='text' placeholder='Title...' ng-model='newItem.title')
+                div.ui.primary.button(ng-click='addNewItem()')
+                  i.plus.icon
+                  | Add
+          div.eight.wide.right.aligned.column
+            div.ui.top.right.pointing.dropdown.icon.labeled.green.button
+              i.tag.icon
+              span.text No Filter
+              div.menu
+                div.item(ng-click='tagFilter = null') No Filter
+                div.divider
+                div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
 
       div.ui.basic.segment
         div.ui.grid
           div.four.wide.column(ng-repeat='state in states')
             h3.ui.header {{ state.title }}
             div.ui.divider
-            div.ui.card(ng-repeat='item in items | state: state')
+            div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
               div.content
                 div.header {{ item.title }}
                 br
+                div.tags
+                  span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
+                div.ui.divider
                 div.ui.dropdown
                   div.text {{ item.state.title }}
                   i.dropdown.icon
@@ -36,3 +49,6 @@ block content
                   //- TODO: Only act on the newly added dropdown
                   script.
                     $('.ui.dropdown').dropdown();
+
+  script.
+    $('.ui.dropdown').dropdown();

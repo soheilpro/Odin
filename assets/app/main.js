@@ -36,3 +36,25 @@ odinApp.filter('state', ['_', function(_) {
     });
   };
 }])
+
+odinApp.filter('tag', ['_', function(_) {
+  return function(items, tag) {
+    if (!tag)
+      return items;
+
+    return _.filter(items, function(item) {
+      return _.contains(item.tags, tag);
+    });
+  };
+}])
+
+odinApp.filter('tags', ['_', function(_) {
+  return function(items) {
+    return _.chain(items)
+      .map(function(item) { return item.tags || [] })
+      .flatten()
+      .uniq()
+      .sort()
+      .value();
+  };
+}])
