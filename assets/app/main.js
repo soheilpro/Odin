@@ -4,15 +4,20 @@ odinApp.factory('_', function() {
   return window._;
 });
 
-odinApp.controller('ItemsController', ['$scope', function($scope) {
-  $scope.states = [
-    { key: 'backlog', title: 'Backlog' },
-    { key: 'todo',    title: 'To Do' },
-    { key: 'doing',   title: 'Doing' },
-    { key: 'done',    title: 'Done' },
-  ];
+odinApp.controller('ItemsController', ['$scope', '$http', '_', function($scope, $http, _) {
+  $http.get('/db/states.json').then(function(response) {
+    $scope.states = response.data.data;
 
-  $scope.items = [];
+    $http.get('/db/items.json').then(function(response) {
+      var items = response.data.data;
+
+      _.each(items, function(item) {
+        item.state = _.find($scope.states, function(state) { return state.key === item.state });
+      });
+
+      $scope.items = items;
+    });
+  });
 
   $scope.addNewItem = function() {
     this.items.push({
