@@ -58,3 +58,11 @@ odinApp.filter('tags', ['_', function(_) {
       .value();
   };
 }])
+
+odinApp.directive('semanticDropdown', function() {
+  return {
+    link: function(scope, element, attr) {
+      element.dropdown();
+    }
+  };
+})
