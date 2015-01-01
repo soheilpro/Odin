@@ -5,10 +5,10 @@ odinApp.factory('_', function() {
 });
 
 odinApp.controller('ItemsController', ['$scope', '$http', '_', function($scope, $http, _) {
-  $http.get('/db/states.json').then(function(response) {
+  $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
 
-    $http.get('/db/items.json').then(function(response) {
+    $http.get('/api/items').then(function(response) {
       var items = response.data.data;
 
       _.each(items, function(item) {
