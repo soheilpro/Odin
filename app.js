@@ -13,8 +13,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/api', require('./routes/api'));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/templates', require('./routes/templates'));
 app.use('/', require('./routes/index'));
 
 app.use(function(request, response, next) {

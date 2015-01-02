@@ -1,4 +1,15 @@
-var odinApp = angular.module('odinApp', []);
+var odinApp = angular.module('odinApp', ['ngRoute']);
+
+odinApp.config(['$routeProvider',
+  function($routeProvider) {
+    $routeProvider.when('/', {
+      templateUrl: '/templates/items',
+      controller: 'ItemsController'
+    }).
+    otherwise({
+      redirectTo: '/'
+    });
+}]);
 
 odinApp.factory('_', function() {
   return window._;
