@@ -15,6 +15,7 @@ app.use(cookieParser());
 
 app.use('/api', require('./routes/api'));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/app', express.static(path.join(__dirname, 'app')));
 app.use('/templates', require('./routes/templates'));
 app.use('/', require('./routes/index'));
 
