@@ -22,15 +22,10 @@ div(ng-controller='ProjectController')
         div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
           div.content
             div.header {{ item.title }}
-            br
-            div.tags
+            div.description(ng-if='item.description') {{ item.description }}
+            div.tags(ng-if='item.tags.length')
+              br
               span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
-            div.ui.divider
-            div.ui.dropdown(semantic-dropdown)
-              div.text {{ item.state.title }}
-              i.dropdown.icon
-              div.menu
-                div.item(ng-repeat='state in states' ng-attr-data-value='{{ state.key }}' ng-click='item.state = state') {{ state.title }}
 
 script.
   $('.ui.dropdown').dropdown();
