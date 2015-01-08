@@ -33,9 +33,14 @@ router.get('/projects/:projectId', function(request, response) {
 
 router.get('/projects/:projectId/items', function(request, response) {
   var db = loadDB();
+  var items = _.filter(db.items, function(item) { return item.project.id === request.params.projectId; });
+
+  _.each(items, function(item) {
+    item.state = _.find(db.states, function(state) { return state.id === item.state.id; });
+  });
 
   response.json({
-    data: _.filter(db.items, function(item) { return item.project.id === request.params.projectId; })
+    data: items
   });
 });
 

@@ -33,16 +33,10 @@ odinApp.controller('ProjectController', ['$scope', '$routeParams', '$http', '_',
 
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
+  });
 
-    $http.get('/api/projects/' + $routeParams.projectId + '/items').then(function(response) {
-      var items = response.data.data;
-
-      _.each(items, function(item) {
-        item.state = _.find($scope.states, function(state) { return state.key === item.state });
-      });
-
-      $scope.items = items;
-    });
+  $http.get('/api/projects/' + $routeParams.projectId + '/items').then(function(response) {
+    $scope.items = response.data.data;
   });
 
   $scope.addNewItem = function() {
@@ -58,7 +52,7 @@ odinApp.controller('ProjectController', ['$scope', '$routeParams', '$http', '_',
 odinApp.filter('state', ['_', function(_) {
   return function(items, state) {
     return _.filter(items, function(item) {
-      return item.state.key === state.key;
+      return item.state.id === state.id;
     });
   };
 }])
