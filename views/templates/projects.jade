@@ -7,3 +7,4 @@ div(ng-controller='ProjectsController')
       a.ui.card(ng-repeat='project in projects' href='#/projects/{{ project.id }}')
         div.content
           div.header {{ project.title }}
+          div.description(ng-if='project.description') {{ project.description }}
