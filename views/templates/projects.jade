@@ -1,0 +1,9 @@
+div(ng-controller='ProjectsController')
+  div.ui.segment
+    h1.ui.header Projects
+
+  div.ui.basic.segment
+    div.ui.cards
+      a.ui.card(ng-repeat='project in projects' href='#/projects/{{ project.id }}')
+        div.content
+          div.header {{ project.title }}

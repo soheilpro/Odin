@@ -1,13 +1,10 @@
-div(ng-controller='ItemsController')
+div(ng-controller='ProjectController')
   div.ui.segment
     div.ui.grid
       div.eight.wide.column
-        form(ng-submit="addNewItem()")
-          div.ui.action.input
-            input(type='text' placeholder='Title...' ng-model='newItem.title')
-            div.ui.primary.button(ng-click='addNewItem()')
-              i.plus.icon
-              | Add
+        h1.ui.header
+          a(href='#/projects') Projects
+          |  &gt; {{ project.title }}
       div.eight.wide.right.aligned.column
         div.ui.top.right.pointing.dropdown.icon.labeled.green.button
           i.tag.icon

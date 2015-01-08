@@ -2,12 +2,17 @@ var odinApp = angular.module('odinApp', ['ngRoute']);
 
 odinApp.config(['$routeProvider',
   function($routeProvider) {
-    $routeProvider.when('/', {
-      templateUrl: '/templates/items',
-      controller: 'ItemsController'
-    }).
-    otherwise({
-      redirectTo: '/'
+    $routeProvider
+    .when('/projects', {
+      templateUrl: '/templates/projects',
+      controller: 'ProjectsController'
+    })
+    .when('/projects/:projectId', {
+      templateUrl: '/templates/project',
+      controller: 'ProjectController'
+    })
+    .otherwise({
+      redirectTo: '/projects'
     });
 }]);
 
@@ -15,11 +20,21 @@ odinApp.factory('_', function() {
   return window._;
 });
 
-odinApp.controller('ItemsController', ['$scope', '$http', '_', function($scope, $http, _) {
+odinApp.controller('ProjectsController', ['$scope', '$http', function($scope, $http) {
+  $http.get('/api/projects').then(function(response) {
+    $scope.projects = response.data.data;
+  });
+}])
+
+odinApp.controller('ProjectController', ['$scope', '$routeParams', '$http', '_', function($scope, $routeParams, $http, _) {
+  $http.get('/api/projects/' + $routeParams.projectId).then(function(response) {
+    $scope.project = response.data.data;
+  });
+
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
 
-    $http.get('/api/items').then(function(response) {
+    $http.get('/api/projects/' + $routeParams.projectId + '/items').then(function(response) {
       var items = response.data.data;
 
       _.each(items, function(item) {
