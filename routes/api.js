@@ -4,7 +4,7 @@ var _ = require('underscore');
 var router = express.Router();
 
 function loadDB() {
-  return JSON.parse(fs.readFileSync('db.json'));
+  return JSON.parse(fs.readFileSync('db/db.json'));
 }
 
 router.get('/states', function(request, response) {
