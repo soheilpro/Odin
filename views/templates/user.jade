@@ -6,7 +6,7 @@ div(ng-controller='UserController')
           a(href='#/users') Users
           |  &gt; {{ user.name }}
       div.eight.wide.right.aligned.column
-        div.ui.top.right.pointing.dropdown.icon.labeled.green.button
+        div.ui.top.right.pointing.dropdown.icon.labeled.green.button(semantic-dropdown)
           i.tag.icon
           span.text No Filter
           div.menu
@@ -32,6 +32,3 @@ div(ng-controller='UserController')
             div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
               a(href='#/users/{{ assignedUser.id }}')
                 img.ui.avatar.image(src='/api/users/{{ assignedUser.id }}/avatar' ng-attr-data-title='{{ assignedUser.name }}' semantic-popup)
-
-script.
-  $('.ui.dropdown').dropdown();
