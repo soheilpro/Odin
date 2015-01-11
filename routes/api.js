@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var express = require('express');
 var _ = require('underscore');
 var router = express.Router();
@@ -6,6 +7,18 @@ var router = express.Router();
 function loadDB() {
   return JSON.parse(fs.readFileSync('db/db.json'));
 }
+
+router.get('/users', function(request, response) {
+  var db = loadDB();
+
+  response.json({
+    data: db.users
+  });
+});
+
+router.get('/users/:userId/avatar', function(request, response) {
+  response.sendFile(path.resolve(path.join(__dirname, '/../db/user' + request.params.userId + '.png')));
+});
 
 router.get('/states', function(request, response) {
   var db = loadDB();
@@ -37,6 +50,10 @@ router.get('/projects/:projectId/items', function(request, response) {
 
   _.each(items, function(item) {
     item.state = _.find(db.states, function(state) { return state.id === item.state.id; });
+
+    _.each(item.assignedUsers, function(assignedUser, index) {
+      item.assignedUsers[index] = _.find(db.users, function(user) { return user.id === assignedUser.id; });
+    });
   });
 
   response.json({

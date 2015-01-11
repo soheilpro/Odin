@@ -86,3 +86,11 @@ odinApp.directive('semanticDropdown', function() {
     }
   };
 })
+
+odinApp.directive('semanticPopup', function() {
+  return {
+    link: function(scope, element, attr) {
+      element.popup();
+    }
+  };
+})

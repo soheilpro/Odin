@@ -26,6 +26,9 @@ div(ng-controller='ProjectController')
             div.tags(ng-if='item.tags.length')
               br
               span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
+          div.extra.content(ng-if='item.assignedUsers')
+            div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
+              img.ui.avatar.image(src='/api/users/{{ assignedUser.id }}/avatar' ng-attr-data-title='{{ assignedUser.name }}' semantic-popup)
 
 script.
   $('.ui.dropdown').dropdown();
