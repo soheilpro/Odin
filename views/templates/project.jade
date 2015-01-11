@@ -1,12 +1,20 @@
 div(ng-controller='ProjectController')
   div.ui.segment
+    div.ui.secondary.menu
+      a.active.item(href='#/projects')
+        i.folder.icon
+        | Projects
+      a.item(href='#/users')
+        i.user.icon
+        | Users
+
+  div.ui.basic.segment
     div.ui.grid
       div.eight.wide.column
-        h1.ui.header
-          a(href='#/projects') Projects
-          |  &gt; {{ project.title }}
+          h1.ui.header
+            | {{ project.name }}
       div.eight.wide.right.aligned.column
-        div.ui.top.right.pointing.dropdown.icon.labeled.green.button(semantic-dropdown)
+        div.ui.top.right.pointing.dropdown.icon.labeled.green.button(semantic-dropdown style='float: right')
           i.tag.icon
           span.text No Filter
           div.menu

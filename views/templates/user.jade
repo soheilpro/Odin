@@ -1,12 +1,20 @@
 div(ng-controller='UserController')
   div.ui.segment
+    div.ui.secondary.menu
+      a.item(href='#/projects')
+        i.folder.icon
+        | Projects
+      a.active.item(href='#/users')
+        i.user.icon
+        | Users
+
+  div.ui.basic.segment
     div.ui.grid
       div.eight.wide.column
-        h1.ui.header
-          a(href='#/users') Users
-          |  &gt; {{ user.name }}
+          h1.ui.header
+            | {{ user.name }}
       div.eight.wide.right.aligned.column
-        div.ui.top.right.pointing.dropdown.icon.labeled.green.button(semantic-dropdown)
+        div.ui.top.right.pointing.dropdown.icon.labeled.green.button(semantic-dropdown style='float: right')
           i.tag.icon
           span.text No Filter
           div.menu
@@ -27,7 +35,7 @@ div(ng-controller='UserController')
               br
               span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
             br
-            a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.title }}
+            a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
           div.extra.content(ng-if='item.assignedUsers')
             div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
               a(href='#/users/{{ assignedUser.id }}')

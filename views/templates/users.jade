@@ -1,6 +1,12 @@
 div(ng-controller='UsersController')
   div.ui.segment
-    h1.ui.header Users
+    div.ui.secondary.menu
+      a.item(href='#/projects')
+        i.folder.icon
+        | Projects
+      a.active.item(href='#/users')
+        i.user.icon
+        | Users
 
   div.ui.basic.segment
     div.ui.ten.cards

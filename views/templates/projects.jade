@@ -1,10 +1,16 @@
 div(ng-controller='ProjectsController')
   div.ui.segment
-    h1.ui.header Projects
+    div.ui.secondary.menu
+      a.active.item(href='#/projects')
+        i.folder.icon
+        | Projects
+      a.item(href='#/users')
+        i.user.icon
+        | Users
 
   div.ui.basic.segment
     div.ui.cards
       a.ui.card(ng-repeat='project in projects' href='#/projects/{{ project.id }}')
         div.content
-          div.header {{ project.title }}
+          div.header {{ project.name }}
           div.description(ng-if='project.description') {{ project.description }}
