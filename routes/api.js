@@ -16,8 +16,34 @@ router.get('/users', function(request, response) {
   });
 });
 
+router.get('/users/:userId', function(request, response) {
+  var db = loadDB();
+
+  response.json({
+    data: _.find(db.users, function(user) { return user.id === request.params.userId; })
+  });
+});
+
 router.get('/users/:userId/avatar', function(request, response) {
   response.sendFile(path.resolve(path.join(__dirname, '/../db/user' + request.params.userId + '.png')));
+});
+
+router.get('/users/:userId/items', function(request, response) {
+  var db = loadDB();
+  var items = _.filter(db.items, function(item) { return _.any(item.assignedUsers, function(assignedUser) { return assignedUser.id === request.params.userId; })});
+
+  _.each(items, function(item) {
+    item.state = _.find(db.states, function(state) { return state.id === item.state.id; });
+    item.project = _.find(db.projects, function(project) { return project.id === item.project.id; });
+
+    _.each(item.assignedUsers, function(assignedUser, index) {
+      item.assignedUsers[index] = _.find(db.users, function(user) { return user.id === assignedUser.id; });
+    });
+  });
+
+  response.json({
+    data: items
+  });
 });
 
 router.get('/states', function(request, response) {

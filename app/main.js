@@ -3,6 +3,14 @@ var odinApp = angular.module('odinApp', ['ngRoute']);
 odinApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider
+    .when('/users', {
+      templateUrl: '/templates/users',
+      controller: 'UsersController'
+    })
+    .when('/users/:userId', {
+      templateUrl: '/templates/user',
+      controller: 'UserController'
+    })
     .when('/projects', {
       templateUrl: '/templates/projects',
       controller: 'ProjectsController'
@@ -19,6 +27,26 @@ odinApp.config(['$routeProvider',
 odinApp.factory('_', function() {
   return window._;
 });
+
+odinApp.controller('UsersController', ['$scope', '$http', function($scope, $http) {
+  $http.get('/api/users').then(function(response) {
+    $scope.users = response.data.data;
+  });
+}])
+
+odinApp.controller('UserController', ['$scope', '$routeParams', '$http', '_', function($scope, $routeParams, $http, _) {
+  $http.get('/api/users/' + $routeParams.userId).then(function(response) {
+    $scope.user = response.data.data;
+  });
+
+  $http.get('/api/states').then(function(response) {
+    $scope.states = response.data.data;
+  });
+
+  $http.get('/api/users/' + $routeParams.userId + '/items').then(function(response) {
+    $scope.items = response.data.data;
+  });
+}])
 
 odinApp.controller('ProjectsController', ['$scope', '$http', function($scope, $http) {
   $http.get('/api/projects').then(function(response) {

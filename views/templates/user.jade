@@ -1,10 +1,10 @@
-div(ng-controller='ProjectController')
+div(ng-controller='UserController')
   div.ui.segment
     div.ui.grid
       div.eight.wide.column
         h1.ui.header
-          a(href='#/projects') Projects
-          |  &gt; {{ project.title }}
+          a(href='#/users') Users
+          |  &gt; {{ user.name }}
       div.eight.wide.right.aligned.column
         div.ui.top.right.pointing.dropdown.icon.labeled.green.button
           i.tag.icon
@@ -26,6 +26,8 @@ div(ng-controller='ProjectController')
             div.tags(ng-if='item.tags.length')
               br
               span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
+            br
+            a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.title }}
           div.extra.content(ng-if='item.assignedUsers')
             div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
               a(href='#/users/{{ assignedUser.id }}')
