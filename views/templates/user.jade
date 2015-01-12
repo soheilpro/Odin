@@ -39,7 +39,7 @@ div
               br
               div.ui.tiny.header Prerequisites:
               div(ng-repeat='prerequisiteItem in item.prerequisiteItems')
-                div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important')
+                div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
                 | {{ prerequisiteItem.title }}
             br
             a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
