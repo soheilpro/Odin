@@ -35,6 +35,12 @@ router.get('/users/:userId/items', function(request, response) {
     _.each(item.assignedUsers, function(assignedUser, index) {
       item.assignedUsers[index] = db.getUserById(assignedUser.id);
     });
+
+    _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
+      var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+      prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+      item.prerequisiteItems[index] = prerequisiteItem
+    });
   });
 
   response.json({
@@ -75,6 +81,13 @@ router.get('/projects/:projectId/items', function(request, response) {
 
     _.each(item.assignedUsers, function(assignedUser, index) {
       item.assignedUsers[index] = db.getUserById(assignedUser.id);
+    });
+
+    _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
+      var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+      prerequisiteItem.project = db.getProjectById(prerequisiteItem.project.id);
+      prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+      item.prerequisiteItems[index] = prerequisiteItem
     });
   });
 

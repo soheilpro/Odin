@@ -34,6 +34,12 @@ div
             div.tags(ng-if='item.tags.length')
               br
               span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
+            div(ng-if='item.prerequisiteItems')
+              br
+              div.ui.tiny.header Prerequisites:
+              div(ng-repeat='prerequisiteItem in item.prerequisiteItems')
+                div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px')
+                | {{ prerequisiteItem.title }}
           div.extra.content(ng-if='item.assignedUsers')
             div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
               a(href='#/users/{{ assignedUser.id }}')
