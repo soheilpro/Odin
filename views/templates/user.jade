@@ -1,12 +1,9 @@
+include menu
+include itemCard
+
 div
   div.ui.segment
-    div.ui.secondary.menu
-      a.item(href='#/projects')
-        i.folder.icon
-        | Projects
-      a.active.item(href='#/users')
-        i.user.icon
-        | Users
+    +menu('Users')
 
   div.ui.basic.segment
     div.ui.grid
@@ -29,21 +26,4 @@ div
         span.ui.header {{ state.title }}
         div.ui.divider
         div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
-          div.content
-            div.header {{ item.title }}
-            div.description(ng-if='item.description') {{ item.description }}
-            div.tags(ng-if='item.tags.length')
-              br
-              span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
-            div(ng-if='item.prerequisiteItems')
-              br
-              div.ui.tiny.header Prerequisites:
-              div(ng-repeat='prerequisiteItem in item.prerequisiteItems')
-                div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
-                | {{ prerequisiteItem.title }}
-            br
-            a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
-          div.extra.content(ng-if='item.assignedUsers')
-            div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
-              a(href='#/users/{{ assignedUser.id }}')
-                img.ui.avatar.image(src='/api/users/{{ assignedUser.id }}/avatar' ng-attr-data-title='{{ assignedUser.name }}' semantic-popup)
+          +itemCard(item, true)

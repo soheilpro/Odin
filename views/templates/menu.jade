@@ -1,0 +1,8 @@
+mixin menu(activeItem)
+  div.ui.secondary.menu
+    a.item(href='#/projects' class=activeItem == 'Projects' ? 'active' : '')
+      i.folder.icon
+      | Projects
+    a.item(href='#/users' class=activeItem == 'Users' ? 'active' : '')
+      i.user.icon
+      | Users

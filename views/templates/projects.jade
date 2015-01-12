@@ -1,12 +1,8 @@
+include menu
+
 div
   div.ui.segment
-    div.ui.secondary.menu
-      a.active.item(href='#/projects')
-        i.folder.icon
-        | Projects
-      a.item(href='#/users')
-        i.user.icon
-        | Users
+    +menu('Projects')
 
   div.ui.basic.segment
     div.ui.cards
