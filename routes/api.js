@@ -1,26 +1,22 @@
-var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var _ = require('underscore');
 var router = express.Router();
-
-function loadDB() {
-  return JSON.parse(fs.readFileSync('db/db.json'));
-}
+var DB = require('../db.js');
 
 router.get('/users', function(request, response) {
-  var db = loadDB();
+  var db = new DB();
 
   response.json({
-    data: db.users
+    data: db.getUsers()
   });
 });
 
 router.get('/users/:userId', function(request, response) {
-  var db = loadDB();
+  var db = new DB();
 
   response.json({
-    data: _.find(db.users, function(user) { return user.id === request.params.userId; })
+    data: db.getUserById(request.params.userId)
   });
 });
 
@@ -29,15 +25,15 @@ router.get('/users/:userId/avatar', function(request, response) {
 });
 
 router.get('/users/:userId/items', function(request, response) {
-  var db = loadDB();
-  var items = _.filter(db.items, function(item) { return _.any(item.assignedUsers, function(assignedUser) { return assignedUser.id === request.params.userId; })});
+  var db = new DB();
+  var items = db.getItemsByAssignedUserId(request.params.userId);;
 
   _.each(items, function(item) {
-    item.state = _.find(db.states, function(state) { return state.id === item.state.id; });
-    item.project = _.find(db.projects, function(project) { return project.id === item.project.id; });
+    item.state = db.getStateById(item.state.id);
+    item.project = db.getProjectById(item.project.id);
 
     _.each(item.assignedUsers, function(assignedUser, index) {
-      item.assignedUsers[index] = _.find(db.users, function(user) { return user.id === assignedUser.id; });
+      item.assignedUsers[index] = db.getUserById(assignedUser.id);
     });
   });
 
@@ -47,38 +43,38 @@ router.get('/users/:userId/items', function(request, response) {
 });
 
 router.get('/states', function(request, response) {
-  var db = loadDB();
+  var db = new DB();
 
   response.json({
-    data: db.states
+    data: db.getStates()
   });
 });
 
 router.get('/projects', function(request, response) {
-  var db = loadDB();
+  var db = new DB();
 
   response.json({
-    data: db.projects
+    data: db.getProjects()
   });
 });
 
 router.get('/projects/:projectId', function(request, response) {
-  var db = loadDB();
+  var db = new DB();
 
   response.json({
-    data: _.find(db.projects, function(project) { return project.id === request.params.projectId; })
+    data: db.getProjectById(request.params.projectId)
   });
 });
 
 router.get('/projects/:projectId/items', function(request, response) {
-  var db = loadDB();
-  var items = _.filter(db.items, function(item) { return item.project.id === request.params.projectId; });
+  var db = new DB();
+  var items = db.getItemsByProjectId(request.params.projectId);
 
   _.each(items, function(item) {
-    item.state = _.find(db.states, function(state) { return state.id === item.state.id; });
+    item.state = db.getStateById(item.state.id);
 
     _.each(item.assignedUsers, function(assignedUser, index) {
-      item.assignedUsers[index] = _.find(db.users, function(user) { return user.id === assignedUser.id; });
+      item.assignedUsers[index] = db.getUserById(assignedUser.id);
     });
   });
 
