@@ -25,7 +25,8 @@ div
   div.ui.basic.segment
     div.ui.grid
       div.four.wide.column(ng-repeat='state in states')
-        h3.ui.header {{ state.title }}
+        span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
+        span.ui.header {{ state.title }}
         div.ui.divider
         div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
           div.content
@@ -38,7 +39,7 @@ div
               br
               div.ui.tiny.header Prerequisites:
               div(ng-repeat='prerequisiteItem in item.prerequisiteItems')
-                div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px')
+                div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important')
                 | {{ prerequisiteItem.title }}
           div.extra.content(ng-if='item.assignedUsers')
             div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
