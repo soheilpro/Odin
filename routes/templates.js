@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+router.get('/overview', function(request, response) {
+  response.render('templates/overview');
+});
+
 router.get('/users', function(request, response) {
   response.render('templates/users');
 });

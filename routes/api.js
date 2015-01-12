@@ -96,4 +96,28 @@ router.get('/projects/:projectId/items', function(request, response) {
   });
 });
 
+router.get('/items', function(request, response) {
+  var db = new DB();
+  var items = db.getItems();
+
+  _.each(items, function(item) {
+    item.state = db.getStateById(item.state.id);
+    item.project = db.getProjectById(item.project.id);
+
+    _.each(item.assignedUsers, function(assignedUser, index) {
+      item.assignedUsers[index] = db.getUserById(assignedUser.id);
+    });
+
+    _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
+      var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+      prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+      item.prerequisiteItems[index] = prerequisiteItem
+    });
+  });
+
+  response.json({
+    data: items
+  });
+});
+
 module.exports = router;

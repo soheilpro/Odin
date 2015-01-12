@@ -1,5 +1,8 @@
 mixin menu(activeItem)
   div.ui.secondary.menu
+    a.item(href='#/overview' class=activeItem == 'Overview' ? 'active' : '')
+      i.home.icon
+      | Overview
     a.item(href='#/projects' class=activeItem == 'Projects' ? 'active' : '')
       i.folder.icon
       | Projects

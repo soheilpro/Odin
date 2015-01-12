@@ -3,6 +3,10 @@ var odinApp = angular.module('odinApp', ['ngRoute']);
 odinApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider
+    .when('/', {
+      templateUrl: '/templates/overview',
+      controller: 'OverviewController'
+    })
     .when('/users', {
       templateUrl: '/templates/users',
       controller: 'UsersController'
@@ -20,13 +24,23 @@ odinApp.config(['$routeProvider',
       controller: 'ProjectController'
     })
     .otherwise({
-      redirectTo: '/projects'
+      redirectTo: '/'
     });
 }]);
 
 odinApp.factory('_', function() {
   return window._;
 });
+
+odinApp.controller('OverviewController', ['$scope', '$http', '_', function($scope, $http, _) {
+  $http.get('/api/states').then(function(response) {
+    $scope.states = response.data.data;
+  });
+
+  $http.get('/api/items').then(function(response) {
+    $scope.items = response.data.data;
+  });
+}])
 
 odinApp.controller('UsersController', ['$scope', '$http', function($scope, $http) {
   $http.get('/api/users').then(function(response) {
