@@ -1,3 +1,4 @@
+var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var _ = require('underscore');
@@ -21,7 +22,16 @@ router.get('/users/:userId', function(request, response) {
 });
 
 router.get('/users/:userId/avatar', function(request, response) {
-  response.sendFile(path.resolve(path.join(__dirname, '/../db/user' + request.params.userId + '.png')));
+  var avatarFile = path.resolve(path.join(__dirname, '/../db/user' + request.params.userId + '.png'))
+
+  fs.exists(avatarFile, function(exists) {
+    if (!exists) {
+      response.redirect('/app/images/avatar.png');
+      return;
+    }
+
+    response.sendFile(avatarFile);
+  });
 });
 
 router.get('/users/:userId/items', function(request, response) {
