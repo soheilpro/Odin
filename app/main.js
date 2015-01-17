@@ -23,6 +23,10 @@ odinApp.config(['$routeProvider',
       templateUrl: '/templates/project',
       controller: 'ProjectController'
     })
+    .when('/items/:itemId', {
+      templateUrl: '/templates/item',
+      controller: 'ItemController'
+    })
     .otherwise({
       redirectTo: '/'
     });
@@ -79,6 +83,26 @@ odinApp.controller('ProjectController', ['$scope', '$routeParams', '$http', '_',
 
   $http.get('/api/projects/' + $routeParams.projectId + '/items').then(function(response) {
     $scope.items = response.data.data;
+  });
+
+  $scope.addNewItem = function() {
+    this.items.push({
+      title: this.newItem.title,
+      state: this.states[0],
+    });
+
+    this.newItem.title = "";
+  };
+}])
+
+odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', function($scope, $routeParams, $http, _) {
+  $http.get('/api/items/' + $routeParams.itemId).then(function(response) {
+    $scope.item = response.data.data;
+    $scope.items = $scope.item.subItems;
+  });
+
+  $http.get('/api/states').then(function(response) {
+    $scope.states = response.data.data;
   });
 
   $scope.addNewItem = function() {

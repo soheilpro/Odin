@@ -51,6 +51,12 @@ router.get('/users/:userId/items', function(request, response) {
       prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
       item.prerequisiteItems[index] = prerequisiteItem
     });
+
+    _.each(item.subItems, function(subItem, index) {
+      var subItem = db.getItemById(subItem.id);
+      subItem.state = db.getStateById(subItem.state.id);
+      item.subItems[index] = subItem
+    });
   });
 
   response.json({
@@ -99,6 +105,13 @@ router.get('/projects/:projectId/items', function(request, response) {
       prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
       item.prerequisiteItems[index] = prerequisiteItem
     });
+
+    _.each(item.subItems, function(subItem, index) {
+      var subItem = db.getItemById(subItem.id);
+      subItem.project = db.getProjectById(subItem.project.id);
+      subItem.state = db.getStateById(subItem.state.id);
+      item.subItems[index] = subItem
+    });
   });
 
   response.json({
@@ -123,10 +136,94 @@ router.get('/items', function(request, response) {
       prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
       item.prerequisiteItems[index] = prerequisiteItem
     });
+
+    _.each(item.subItems, function(subItem, index) {
+      var subItem = db.getItemById(subItem.id);
+      subItem.state = db.getStateById(subItem.state.id);
+      item.subItems[index] = subItem
+    });
   });
 
   response.json({
     data: items
+  });
+});
+
+router.get('/items/:itemId', function(request, response) {
+  var db = new DB();
+  var item = db.getItemById(request.params.itemId);
+
+  item.state = db.getStateById(item.state.id);
+  item.project = db.getProjectById(item.project.id);
+
+  _.each(item.assignedUsers, function(assignedUser, index) {
+    item.assignedUsers[index] = db.getUserById(assignedUser.id);
+  });
+
+  _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
+    var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+    prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+    item.prerequisiteItems[index] = prerequisiteItem
+  });
+
+  _.each(item.subItems, function(subItem, index) {
+    var subItem = db.getItemById(subItem.id);
+    subItem.state = db.getStateById(subItem.state.id);
+
+    _.each(subItem.prerequisiteItems, function(prerequisiteItem, index) {
+      var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+      prerequisiteItem.project = db.getProjectById(prerequisiteItem.project.id);
+      prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+      subItem.prerequisiteItems[index] = prerequisiteItem
+    });
+
+    item.subItems[index] = subItem
+  });
+
+  _.each(item.prerequisiteItems, function(item) {
+    item.state = db.getStateById(item.state.id);
+    item.project = db.getProjectById(item.project.id);
+
+    _.each(item.assignedUsers, function(assignedUser, index) {
+      item.assignedUsers[index] = db.getUserById(assignedUser.id);
+    });
+
+    _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
+      var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+      prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+      item.prerequisiteItems[index] = prerequisiteItem
+    });
+
+    _.each(item.subItems, function(subItem, index) {
+      var subItem = db.getItemById(subItem.id);
+      subItem.state = db.getStateById(subItem.state.id);
+      item.subItems[index] = subItem
+    });
+  });
+
+  _.each(item.subItems, function(item) {
+    item.state = db.getStateById(item.state.id);
+    item.project = db.getProjectById(item.project.id);
+
+    _.each(item.assignedUsers, function(assignedUser, index) {
+      item.assignedUsers[index] = db.getUserById(assignedUser.id);
+    });
+
+    _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
+      var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+      prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+      item.prerequisiteItems[index] = prerequisiteItem
+    });
+
+    _.each(item.subItems, function(subItem, index) {
+      var subItem = db.getItemById(subItem.id);
+      subItem.state = db.getStateById(subItem.state.id);
+      item.subItems[index] = subItem
+    });
+  });
+
+  response.json({
+    data: item
   });
 });
 

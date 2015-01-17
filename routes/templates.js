@@ -21,4 +21,8 @@ router.get('/project', function(request, response) {
   response.render('templates/project');
 });
 
+router.get('/item', function(request, response) {
+  response.render('templates/item');
+});
+
 module.exports = router;

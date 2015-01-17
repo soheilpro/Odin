@@ -1,6 +1,7 @@
 mixin itemCard(item, showProject)
   div.content
-    div.header {{ item.title }}
+    a.header(href='#/items/{{ item.id }}' ng-if='item.subItems') {{ item.title }}
+    div.header(ng-if='!item.subItems') {{ item.title }}
     div.description(ng-if='item.description') {{ item.description }}
     div.tags(ng-if='item.tags.length')
       br

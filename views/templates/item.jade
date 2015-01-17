@@ -1,0 +1,30 @@
+include menu
+include itemCard
+
+div
+  div.ui.segment
+    +menu
+
+  div.ui.basic.segment
+    div.ui.grid
+      div.eight.wide.column
+          h1.ui.header
+            div.ui.black.empty.big.circular.label(style='margin-right: 10px; background-color: {{ item.state.color }} !important')
+            | {{ item.title }}
+      div.eight.wide.right.aligned.column
+        div.ui.top.right.pointing.dropdown.icon.labeled.green.button(semantic-dropdown style='float: right')
+          i.tag.icon
+          span.text No Filter
+          div.menu
+            div.item(ng-click='tagFilter = null') No Filter
+            div.divider
+            div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
+
+  div.ui.basic.segment
+    div.ui.grid
+      div.four.wide.column(ng-repeat='state in states')
+        span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
+        span.ui.header {{ state.title }}
+        div.ui.divider
+        div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
+          +itemCard(item, true)
