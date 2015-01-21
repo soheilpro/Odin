@@ -8,7 +8,7 @@ div
     div.ui.ten.cards
       a.ui.card(ng-repeat='user in users' href='#/users/{{ user.id }}')
         div.image
-          img(src='/api/users/{{ user.id }}/avatar')
+          img(ng-src='/api/users/{{ user.id }}/avatar')
         div.content
           div.header {{ user.name }}
           div.description(ng-if='user.description') {{ user.description }}
