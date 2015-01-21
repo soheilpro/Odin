@@ -69,6 +69,11 @@ odinApp.controller('UserController', ['$scope', '$routeParams', '$http', '_', fu
 odinApp.controller('ProjectsController', ['$scope', '$http', function($scope, $http) {
   $http.get('/api/projects').then(function(response) {
     $scope.projects = response.data.data;
+    $scope.groups = _.chain($scope.projects)
+      .map(function(project) { return project.group || '' })
+      .uniq()
+      .sort()
+      .value();
   });
 }])
 
@@ -142,6 +147,14 @@ odinApp.filter('tags', ['_', function(_) {
       .uniq()
       .sort()
       .value();
+  };
+}])
+
+odinApp.filter('group', ['_', function(_) {
+  return function(projects, group) {
+    return _.filter(projects, function(project) {
+      return project.group === group;
+    });
   };
 }])
 

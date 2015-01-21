@@ -5,8 +5,11 @@ div
     +menu('Projects')
 
   div.ui.basic.segment
-    div.ui.cards
-      a.ui.card(ng-repeat='project in projects' href='#/projects/{{ project.id }}')
-        div.content
-          div.header {{ project.name }}
-          div.description(ng-if='project.description') {{ project.description }}
+    div.ui.grid
+      div.four.wide.column(ng-repeat='group in groups')
+        span.ui.header {{ group || 'Others' }}
+        div.ui.divider
+        a.ui.card(ng-repeat='project in projects | group: group' href='#/projects/{{ project.id }}')
+          div.content
+            div.header {{ project.name }}
+            div.description(ng-if='project.description') {{ project.description }}
