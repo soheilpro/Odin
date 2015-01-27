@@ -3,6 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var debug = require('debug')('odin');
 
 var app = express();
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +27,7 @@ app.use(function(request, response, next) {
 });
 
 app.use(function(error, request, response, next) {
+  debug(error.stack);
   response.status(error.status || 500);
   response.render('error', {
     message: error.message,
