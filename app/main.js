@@ -36,6 +36,10 @@ odinApp.factory('_', function() {
   return window._;
 });
 
+odinApp.factory('$', function() {
+  return window.$;
+});
+
 odinApp.controller('OverviewController', ['$scope', '$http', '_', function($scope, $http, _) {
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
@@ -89,15 +93,6 @@ odinApp.controller('ProjectController', ['$scope', '$routeParams', '$http', '_',
   $http.get('/api/projects/' + $routeParams.projectId + '/items').then(function(response) {
     $scope.items = response.data.data;
   });
-
-  $scope.addNewItem = function() {
-    this.items.push({
-      title: this.newItem.title,
-      state: this.states[0],
-    });
-
-    this.newItem.title = "";
-  };
 }])
 
 odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', function($scope, $routeParams, $http, _) {
@@ -109,15 +104,41 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', fu
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
   });
+}])
+
+odinApp.controller('MenuController', ['$scope', '$http', '$', function($scope, $http, $) {
+  $http.get('/api/states').then(function(response) {
+    $scope.states = response.data.data;
+  });
+
+  $http.get('/api/projects').then(function(response) {
+    $scope.projects = response.data.data;
+  });
 
   $scope.addNewItem = function() {
-    this.items.push({
-      title: this.newItem.title,
-      state: this.states[0],
-    });
+    $scope.newItem = {};
 
-    this.newItem.title = "";
-  };
+    $(".newItemModal").modal({onApprove: function() { return false; }}).modal("show");
+  }
+
+  $scope.saveNewItem = function() {
+    $scope.newItem.isSaving = true;
+
+    var data = {
+      title: $scope.newItem.title,
+      description: $scope.newItem.description,
+      tags: $scope.newItem.tags,
+      state_id: $scope.newItem.stateId,
+      project_id: $scope.newItem.projectId
+    };
+
+    $http.post('/api/items/', data).then(function(response) {
+      if ($scope.project && $scope.project.id === response.data.data.project.id)
+        $scope.items.push(response.data.data);
+
+      $(".newItemModal").modal("hide");
+    });
+  }
 }])
 
 odinApp.filter('state', ['_', function(_) {
@@ -160,8 +181,15 @@ odinApp.filter('group', ['_', function(_) {
 
 odinApp.directive('semanticDropdown', function() {
   return {
-    link: function(scope, element, attr) {
-      element.dropdown();
+    require: "?ngModel",
+    link: function(scope, element, attr, model) {
+      element.dropdown({
+        onChange: function(value) {
+          if (model)
+            model.$setViewValue(value);
+        }
+      });
+      element.dropdown('clear');
     }
   };
 })

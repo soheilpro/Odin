@@ -1,5 +1,5 @@
 mixin menu(activeItem)
-  div.ui.secondary.menu
+  div.ui.secondary.menu(ng-controller='MenuController')
     a.item(href='#/overview' class=activeItem == 'Overview' ? 'active' : '')
       i.home.icon
       | Overview
@@ -9,3 +9,37 @@ mixin menu(activeItem)
     a.item(href='#/users' class=activeItem == 'Users' ? 'active' : '')
       i.user.icon
       | Users
+      a.right.item(ng-click='addNewItem();')
+        i.add.icon
+        | Add Item
+      div.ui.small.modal.newItemModal
+        div.content
+          div.ui.form
+            div.field
+              label Title:
+              input(type='text' ng-model='newItem.title' ng-disabled='newItem.isSaving')
+            div.field
+              label Description:
+              textarea(ng-model='newItem.description' ng-disabled='newItem.isSaving')
+            div.field
+              label Tags:
+              input(type='text' ng-model='newItem.tags' ng-disabled='newItem.isSaving')
+            div.field
+              label State:
+              div.ui.selection.dropdown(semantic-dropdown ng-model='newItem.stateId' ng-class='{disabled: newItem.isSaving}')
+                div.default.text &nbsp;
+                i.dropdown.icon
+                div.menu
+                  div.item(ng-repeat='state in states' ng-attr-data-value='{{ state.id }}')
+                    span.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ state.color }} !important')
+                    | {{ state.title }}
+            div.field
+              label Project:
+              div.ui.selection.dropdown(semantic-dropdown ng-model='newItem.projectId' ng-class='{disabled: newItem.isSaving}')
+                div.default.text &nbsp;
+                i.dropdown.icon
+                div.menu
+                  div.item(ng-repeat='project in projects' ng-attr-data-value='{{ project.id }}') {{ project.name }}
+        div.actions
+          div.ui.button Cancel
+          div.ui.positive.icon.button(ng-class="{loading: newItem.isSaving}" ng-click='saveNewItem();') Add

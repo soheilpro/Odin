@@ -1,9 +1,15 @@
 var fs = require('fs');
+var uuid = require('node-uuid');
 var _ = require('underscore');
 
 function DB() {
-  this.data = JSON.parse(fs.readFileSync('db/db.json'));
+  this.filename = 'db/db.json';
+  this.data = JSON.parse(fs.readFileSync(this.filename));
 }
+
+DB.prototype.persist = function() {
+  fs.writeFileSync(this.filename, JSON.stringify(this.data, null, 2));
+};
 
 DB.prototype.getUsers = function() {
   return this.data.users;
@@ -57,6 +63,12 @@ DB.prototype.getItemById = function(itemId) {
   return _.find(this.data.items, function(item) {
     return item.id === itemId;
   })
+};
+
+DB.prototype.saveItem = function(item) {
+  item.id = uuid.v4();
+  this.data.items.push(item);
+  this.persist();
 };
 
 module.exports = DB;

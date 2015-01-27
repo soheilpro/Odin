@@ -227,4 +227,25 @@ router.get('/items/:itemId', function(request, response) {
   });
 });
 
+router.post('/items', function(request, response) {
+  var item = {
+    title: request.param('title'),
+    description: request.param('description'),
+    tags: request.param('tags'),
+    state: {
+      id: request.param('state_id'),
+    },
+    project: {
+      id: request.param('project_id'),
+    }
+  };
+
+  var db = new DB();
+  db.saveItem(item);
+
+  response.json({
+    data: item
+  });
+});
+
 module.exports = router;
