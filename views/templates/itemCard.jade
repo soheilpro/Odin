@@ -5,7 +5,7 @@ mixin itemCard(item, showProject)
     div.description(ng-if='item.description') {{ item.description }}
     div.tags(ng-if='item.tags.length')
       br
-      span.ui.green.label(ng-repeat='tag in item.tags') {{ tag }}
+      span.ui.label(ng-repeat='tag in item.tags') {{ tag }}
     div(ng-if='item.prerequisiteItems.length')
       br
       div.ui.tiny.header Prerequisites:
