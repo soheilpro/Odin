@@ -1,7 +1,6 @@
 mixin itemCard(item, showProject)
   div.content
-    a.header(href='#/items/{{ item.id }}' ng-if='item.subItems') {{ item.title }}
-    div.header(ng-if='!item.subItems') {{ item.title }}
+    a.header(href='#/items/{{ item.id }}') {{ item.title }}
     div.description(ng-if='item.description') {{ item.description }}
     div.tags(ng-if='item.tags.length')
       br
@@ -9,9 +8,9 @@ mixin itemCard(item, showProject)
     div(ng-if='item.prerequisiteItems.length')
       br
       div.ui.tiny.header Prerequisites:
-      div(ng-repeat='prerequisiteItem in item.prerequisiteItems')
+      div(ng-repeat='prerequisiteItem in item.prerequisiteItems' style='margin-bottom: 2px')
         div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
-        | {{ prerequisiteItem.title }}
+        a(href='#/items/{{ prerequisiteItem.id }}' style='color: #444') {{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}
     if showProject
       br
       a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
