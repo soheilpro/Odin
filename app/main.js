@@ -27,6 +27,10 @@ odinApp.config(['$routeProvider',
       templateUrl: '/templates/item',
       controller: 'ItemController'
     })
+    .when('/new-item', {
+      templateUrl: '/templates/new-item',
+      controller: 'NewItemController'
+    })
     .otherwise({
       redirectTo: '/'
     });
@@ -106,7 +110,12 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', fu
   });
 }])
 
-odinApp.controller('MenuController', ['$scope', '$http', '$', function($scope, $http, $) {
+odinApp.controller('NewItemController', ['$scope', '$location', '$http', '$', '_', function($scope, $location, $http, $, _) {
+  $scope.item = {
+    prerequisiteItems: [],
+    subItems: []
+  };
+
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
   });
@@ -115,28 +124,54 @@ odinApp.controller('MenuController', ['$scope', '$http', '$', function($scope, $
     $scope.projects = response.data.data;
   });
 
-  $scope.addNewItem = function() {
-    $scope.newItem = {};
+  $http.get('/api/items').then(function(response) {
+    $scope.items = response.data.data;
+  });
 
-    $(".newItemModal").modal({onApprove: function() { return false; }}).modal("show");
-  }
+  $http.get('/api/users').then(function(response) {
+    $scope.users = response.data.data;
+  });
 
-  $scope.saveNewItem = function() {
-    $scope.newItem.isSaving = true;
+  $scope.addPrerequisiteItem = function(itemId) {
+    $http.get('/api/items/' + itemId).then(function(response) {
+      $scope.item.prerequisiteItems.push(response.data.data);
+    });
+  };
+
+  $scope.removePrerequisiteItem = function(prerequisiteItem) {
+    $scope.item.prerequisiteItems = _.reject($scope.item.prerequisiteItems, function(item) {
+      return item.id === prerequisiteItem.id;
+    });
+  };
+
+  $scope.addSubItem = function(itemId) {
+    $http.get('/api/items/' + itemId).then(function(response) {
+      $scope.item.subItems.push(response.data.data);
+    });
+  };
+
+  $scope.removeSubItem = function(subItem) {
+    $scope.item.subItems = _.reject($scope.item.subItems, function(item) {
+      return item.id === subItem.id;
+    });
+  };
+
+  $scope.save = function(item) {
+    $scope.isSaving = true;
 
     var data = {
-      title: $scope.newItem.title,
-      description: $scope.newItem.description,
-      tags: $scope.newItem.tags,
-      state_id: $scope.newItem.stateId,
-      project_id: $scope.newItem.projectId
+      title: item.title,
+      description: item.description,
+      tags: item.tags,
+      state_id: $scope.states[0].id,
+      project_id: item.project.id,
+      prerequisite_item_ids: _.pluck(item.prerequisiteItems, 'id').join(),
+      sub_item_ids: _.pluck(item.subItems, 'id').join(),
+      assigned_user_ids: item.assignedUser ? item.assignedUser.id : ''
     };
 
     $http.post('/api/items/', data).then(function(response) {
-      if ($scope.project && $scope.project.id === response.data.data.project.id)
-        $scope.items.push(response.data.data);
-
-      $(".newItemModal").modal("hide");
+      $location.path('/items/' + response.data.data.id);
     });
   }
 }])

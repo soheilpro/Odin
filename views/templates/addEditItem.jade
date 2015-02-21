@@ -1,0 +1,115 @@
+include menu
+
+div
+  div.ui.segment
+    +menu
+
+  div.ui.basic.segment.form(style='padding-left: 40px; padding-right: 40px;')
+    div.ui.basic.right.aligned.segment(style='padding-right: 0')
+      div.ui.primary.submit.button(ng-class='{disabled: isSaving}') Save
+    div.ui.two.column.centered.grid
+      div.column
+        div.field
+          label Title:
+          input(type='text' id='title' ng-model='item.title' ng-disabled='isSaving')
+          br
+          br
+        div.field
+          label Description:
+          textarea(ng-model='item.description' ng-disabled='isSaving')
+          br
+          br
+        div.field
+          label Tags:
+          input(type='text' ng-model='item.tags' ng-disabled='isSaving')
+          br
+          br
+        div.field
+          label Project:
+          div.ui.selection.dropdown(semantic-dropdown ng-model='item.project.id' ng-class='{disabled: isSaving}')
+            input(type='hidden' id='project')
+            div.default.text &nbsp;
+            i.dropdown.icon
+            div.menu
+              div.item(ng-repeat='project in projects' ng-attr-data-value='{{ project.id }}') {{ project.name }}
+      div.column
+        div.field
+          label Assigned To:
+          div.ui.selection.dropdown(semantic-dropdown ng-model='item.assignedUser.id' ng-class='{disabled: isSaving}')
+            input(type='hidden')
+            div.default.text &nbsp;
+            i.dropdown.icon
+            div.menu
+              div.item(data-value='') None
+              div.item(ng-repeat='user in users' ng-attr-data-value='{{ user.id }}')
+                img.ui.mini.avatar.image(ng-src='/api/users/{{ user.id }}/avatar')
+                | {{ user.name }}
+          br
+          br
+        div.field
+          label Prerequisite Items:
+          div.ui.selection.dropdown(style='width: calc(100% - 55px); margin-right: 12px' semantic-dropdown ng-model='newPrerequisiteItemId' ng-class='{disabled: isSaving}')
+            input(type='hidden')
+            div.default.text &nbsp;
+            i.dropdown.icon
+            div.menu
+              div.item(ng-repeat='item in items' ng-attr-data-value='{{ item.id }}')
+                div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ item.state.color }} !important' ng-attr-data-title='{{ item.state.title }}' semantic-popup)
+                | {{ item.project.name }} &mdash; {{ item.title }}
+          div.ui.green.icon.button(ng-click='addPrerequisiteItem(newPrerequisiteItemId);' ng-class='{disabled: isSaving}')
+            i.add.icon
+          div(ng-if='item.prerequisiteItems.length')
+            br
+            div(ng-repeat='prerequisiteItem in item.prerequisiteItems' style='margin-bottom: 2px')
+              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removePrerequisiteItem(prerequisiteItem);' ng-class='{disabled: isSaving}')
+                i.red.delete.icon
+              div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
+              a(href='#/items/{{ prerequisiteItem.id }}' style='color: #444') {{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}
+          div(ng-if='!item.prerequisiteItems.length')
+            br
+            span(style='color: #bbb; margin-left: 5px;') none
+          br
+        div.field
+          label Sub Items:
+          div.ui.selection.dropdown(style='width: calc(100% - 55px); margin-right: 12px' semantic-dropdown ng-model='newSubItemId' ng-class='{disabled: isSaving}')
+            input(type='hidden')
+            div.default.text &nbsp;
+            i.dropdown.icon
+            div.menu
+              div.item(ng-repeat='item in items' ng-attr-data-value='{{ item.id }}')
+                div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ item.state.color }} !important' ng-attr-data-title='{{ item.state.title }}' semantic-popup)
+                | {{ item.project.name }} &mdash; {{ item.title }}
+          div.ui.green.icon.button(ng-click='addSubItem(newSubItemId);' ng-class='{disabled: isSaving}')
+            i.add.icon
+          div(ng-if='item.subItems.length')
+            br
+            div(ng-repeat='subItem in item.subItems' style='margin-bottom: 2px')
+              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removeSubItem(subItem);' ng-class='{disabled: isSaving}')
+                i.red.delete.icon
+              div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ subItem.state.color }} !important' ng-attr-data-title='{{ subItem.state.title }}' semantic-popup)
+              a(href='#/items/{{ subItem.id }}' style='color: #444') {{ subItem.project.name }} &mdash; {{ subItem.title }}
+          div(ng-if='!item.subItems.length')
+            br
+            span(style='color: #bbb; margin-left: 5px;') none
+          br
+      script.
+        $('.ui.form').form({
+          title: {
+            identifier: 'title',
+            rules: [
+              { type: 'empty' }
+            ]
+          },
+          project: {
+            identifier: 'project',
+            rules: [
+              { type: 'empty' }
+            ]
+          },
+        },
+        {
+          onSuccess: function() {
+            var scope = angular.element($(".ui.form")).scope();
+            scope.save(scope.item);
+          }
+        });

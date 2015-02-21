@@ -231,14 +231,25 @@ router.post('/items', function(request, response) {
   var item = {
     title: request.param('title'),
     description: request.param('description'),
-    tags: request.param('tags'),
     state: {
       id: request.param('state_id'),
     },
     project: {
       id: request.param('project_id'),
-    }
+    },
   };
+
+  if (request.param('tags'))
+    item.tags = request.param('tags').split(' ');
+
+  if (request.param('prerequisite_item_ids'))
+    item.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+
+  if (request.param('sub_item_ids'))
+    item.subItems = _.map(request.param('sub_item_ids').split(','), function(id) { return { id: id }; });
+
+  if (request.param('assigned_user_ids'))
+    item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
 
   var db = new DB();
   db.saveItem(item);

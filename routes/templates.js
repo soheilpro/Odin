@@ -25,4 +25,8 @@ router.get('/item', function(request, response) {
   response.render('templates/item');
 });
 
+router.get('/new-item', function(request, response) {
+  response.render('templates/addEditItem');
+});
+
 module.exports = router;
