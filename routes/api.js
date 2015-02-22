@@ -259,4 +259,52 @@ router.post('/items', function(request, response) {
   });
 });
 
+router.patch('/items/:itemId', function(request, response) {
+  var db = new DB();
+  var item = db.getItemById(request.params.itemId);
+
+  if (request.param('title') !== undefined)
+    item.title = request.param('title');
+
+  if (request.param('description') !== undefined)
+    item.description = request.param('description');
+
+  if (request.param('state_id') !== undefined)
+    item.state = {
+      id: request.param('state_id')
+    };
+
+  if (request.param('project_id') !== undefined)
+    item.project = {
+      id: request.param('project_id')
+    };
+
+  if (request.param('tags') !== undefined)
+    item.tags = request.param('tags').split(' ');
+
+  if (request.param('prerequisite_item_ids') !== undefined)
+    if (request.param('prerequisite_item_ids') !== '')
+      item.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+    else
+      item.prerequisiteItems = undefined;
+
+  if (request.param('sub_item_ids') !== undefined)
+    if (request.param('sub_item_ids') !== '')
+      item.subItems = _.map(request.param('sub_item_ids').split(','), function(id) { return { id: id }; });
+    else
+      item.subItems = undefined;
+
+  if (request.param('assigned_user_ids') !== undefined)
+    if (request.param('assigned_user_ids') !== '')
+      item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
+    else
+      item.assignedUsers = undefined;
+
+  db.saveItem(item);
+
+  response.json({
+    data: item
+  });
+});
+
 module.exports = router;

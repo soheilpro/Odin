@@ -27,6 +27,10 @@ odinApp.config(['$routeProvider',
       templateUrl: '/templates/item',
       controller: 'ItemController'
     })
+    .when('/items/:itemId/edit', {
+      templateUrl: '/templates/edit-item',
+      controller: 'EditItemController'
+    })
     .when('/new-item', {
       templateUrl: '/templates/new-item',
       controller: 'NewItemController'
@@ -108,6 +112,80 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', fu
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
   });
+}])
+
+odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams', '$http', '$', '_', function($scope, $location, $routeParams, $http, $, _) {
+  $http.get('/api/items/' + $routeParams.itemId).then(function(response) {
+    var item = response.data.data;
+
+    if (item.tags)
+      item.tags = item.tags.join(' ');
+
+    if (item.assignedUsers && item.assignedUsers.length > 0)
+      item.assignedUser = item.assignedUsers[0];
+
+    if (!item.prerequisiteItems)
+      item.prerequisiteItems = [];
+
+    if (!item.subItems)
+      item.subItems = [];
+
+    $scope.item = item;
+  });
+
+  $http.get('/api/projects').then(function(response) {
+    $scope.projects = response.data.data;
+  });
+
+  $http.get('/api/items').then(function(response) {
+    $scope.items = response.data.data;
+  });
+
+  $http.get('/api/users').then(function(response) {
+    $scope.users = response.data.data;
+  });
+
+  $scope.addPrerequisiteItem = function(itemId) {
+    $http.get('/api/items/' + itemId).then(function(response) {
+      $scope.item.prerequisiteItems.push(response.data.data);
+    });
+  };
+
+  $scope.removePrerequisiteItem = function(prerequisiteItem) {
+    $scope.item.prerequisiteItems = _.reject($scope.item.prerequisiteItems, function(item) {
+      return item.id === prerequisiteItem.id;
+    });
+  };
+
+  $scope.addSubItem = function(itemId) {
+    $http.get('/api/items/' + itemId).then(function(response) {
+      $scope.item.subItems.push(response.data.data);
+    });
+  };
+
+  $scope.removeSubItem = function(subItem) {
+    $scope.item.subItems = _.reject($scope.item.subItems, function(item) {
+      return item.id === subItem.id;
+    });
+  };
+
+  $scope.save = function(item) {
+    $scope.isSaving = true;
+
+    var data = {
+      title: item.title,
+      description: item.description,
+      tags: item.tags,
+      project_id: item.project.id,
+      prerequisite_item_ids: _.pluck(item.prerequisiteItems, 'id').join(),
+      sub_item_ids: _.pluck(item.subItems, 'id').join(),
+      assigned_user_ids: item.assignedUser ? item.assignedUser.id : ''
+    };
+
+    $http.patch('/api/items/' + item.id, data).then(function(response) {
+      $location.path('/items/' + response.data.data.id);
+    });
+  }
 }])
 
 odinApp.controller('NewItemController', ['$scope', '$location', '$http', '$', '_', function($scope, $location, $http, $, _) {
@@ -225,6 +303,11 @@ odinApp.directive('semanticDropdown', function() {
         }
       });
       element.dropdown('clear');
+
+      setTimeout(function() {
+        if (model != null)
+          element.dropdown('set selected', model.$modelValue);
+      }, 100);
     }
   };
 })

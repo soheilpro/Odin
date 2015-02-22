@@ -8,6 +8,7 @@ div
   div.ui.basic.segment
     div.ui.grid
       div.eight.wide.column
+          a.ui.big.label(href='#/projects/{{ item.project.id }}') {{ item.project.name }}
           h1.ui.header
             div.ui.black.empty.big.circular.label(style='margin-right: 10px; background-color: {{ item.state.color }} !important')
             | {{ item.title }}
@@ -15,9 +16,16 @@ div
             span.ui.label(ng-repeat='tag in item.tags') {{ tag }}
             br
             br
+            br
           div.description(ng-if='item.description')
             span(style='white-space: pre') {{ item.description }}
             br
+            br
+            br
+          div.assignedUsers(ng-if='item.assignedUsers.length')
+            div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
+              a(href='#/users/{{ assignedUser.id }}')
+                img.ui.avatar.image(ng-src='/api/users/{{ assignedUser.id }}/avatar' ng-attr-data-title='{{ assignedUser.name }}' semantic-popup)
             br
             br
           div(ng-if='item.prerequisiteItems.length')
@@ -26,7 +34,9 @@ div
               div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
               a(href='#/items/{{ prerequisiteItem.id }}' style='color: #444') {{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}
       div.eight.wide.right.aligned.column
-        a.ui.big.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
+        a.ui.button(href='#/items/{{ item.id }}/edit')
+          i.pencil.icon
+          | Edit
 
   div.ui.basic.segment(ng-if='item.subItems')
     div.ui.grid

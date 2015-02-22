@@ -66,7 +66,15 @@ DB.prototype.getItemById = function(itemId) {
 };
 
 DB.prototype.saveItem = function(item) {
-  item.id = uuid.v4();
+  if (!item.id) {
+    item.id = uuid.v4();
+  }
+  else {
+    this.data.items = _.reject(this.data.items, function(i) {
+      return i.id === item.id;
+    });
+  }
+
   this.data.items.push(item);
   this.persist();
 };
