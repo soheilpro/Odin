@@ -297,6 +297,7 @@ odinApp.directive('semanticDropdown', function() {
     require: "?ngModel",
     link: function(scope, element, attr, model) {
       element.dropdown({
+        fullTextSearch: true,
         onChange: function(value) {
           if (model)
             model.$setViewValue(value);

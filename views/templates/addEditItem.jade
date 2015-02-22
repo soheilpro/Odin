@@ -26,7 +26,7 @@ div
           br
         div.field
           label Project:
-          div.ui.selection.dropdown(semantic-dropdown ng-model='item.project.id' ng-class='{disabled: isSaving}')
+          div.ui.search.selection.dropdown(semantic-dropdown ng-model='item.project.id' ng-class='{disabled: isSaving}')
             input(type='hidden' id='project')
             div.default.text &nbsp;
             i.dropdown.icon
@@ -35,7 +35,7 @@ div
       div.column
         div.field
           label Assigned To:
-          div.ui.selection.dropdown(semantic-dropdown ng-model='item.assignedUser.id' ng-class='{disabled: isSaving}')
+          div.ui.search.selection.dropdown(semantic-dropdown ng-model='item.assignedUser.id' ng-class='{disabled: isSaving}')
             input(type='hidden')
             div.default.text &nbsp;
             i.dropdown.icon
@@ -48,7 +48,7 @@ div
           br
         div.field
           label Prerequisite Items:
-          div.ui.selection.dropdown(style='width: calc(100% - 55px); margin-right: 12px' semantic-dropdown ng-model='newPrerequisiteItemId' ng-class='{disabled: isSaving}')
+          div.ui.search.selection.dropdown(style='width: calc(100% - 55px); margin-right: 12px' semantic-dropdown ng-model='newPrerequisiteItemId' ng-class='{disabled: isSaving}')
             input(type='hidden')
             div.default.text &nbsp;
             i.dropdown.icon
@@ -71,7 +71,7 @@ div
           br
         div.field
           label Sub Items:
-          div.ui.selection.dropdown(style='width: calc(100% - 55px); margin-right: 12px' semantic-dropdown ng-model='newSubItemId' ng-class='{disabled: isSaving}')
+          div.ui.search.selection.dropdown(style='width: calc(100% - 55px); margin-right: 12px' semantic-dropdown ng-model='newSubItemId' ng-class='{disabled: isSaving}')
             input(type='hidden')
             div.default.text &nbsp;
             i.dropdown.icon
