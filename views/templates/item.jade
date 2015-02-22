@@ -37,6 +37,16 @@ div
         a.ui.button(href='#/items/{{ item.id }}/edit')
           i.pencil.icon
           | Edit
+        br
+        br
+        div.ui.selection.dropdown(semantic-dropdown ng-model='item.state.id')
+          input(type='hidden')
+          div.default.text &nbsp;
+          i.dropdown.icon
+          div.menu
+            div.item(ng-repeat='state in states' ng-attr-data-value='{{ state.id }}' ng-click='item.state = state; saveState();')
+              div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
+              | {{ state.title }}
 
   div.ui.basic.segment(ng-if='item.subItems')
     div.ui.grid

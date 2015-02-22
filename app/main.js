@@ -112,6 +112,15 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', fu
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
   });
+
+  $scope.saveState = function() {
+    var data = {
+      state_id: $scope.item.state.id,
+    };
+
+    $http.patch('/api/items/' + $scope.item.id, data).then(function(response) {
+    });
+  };
 }])
 
 odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams', '$http', '$', '_', function($scope, $location, $routeParams, $http, $, _) {
