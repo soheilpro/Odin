@@ -271,6 +271,17 @@ odinApp.filter('state', ['_', function(_) {
   };
 }])
 
+odinApp.filter('title', ['_', function(_) {
+  return function(items, term) {
+    if (!term)
+      return items;
+
+    return _.filter(items, function(item) {
+      return item.title.indexOf(term) != -1;
+    });
+  };
+}])
+
 odinApp.filter('tag', ['_', function(_) {
   return function(items, tag) {
     if (!tag)

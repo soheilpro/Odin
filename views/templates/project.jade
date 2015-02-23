@@ -11,6 +11,9 @@ div
           h1.ui.header
             | {{ project.name }}
       div.eight.wide.right.aligned.column
+        div.ui.left.icon.input(style='margin-right: 20px')
+          input(type='text', placeholder='Search...' ng-model='searchFilter')
+          i.search.icon
         div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right')
           i.tag.icon
           span.text No Filter
@@ -25,5 +28,5 @@ div
         span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
         span.ui.header {{ state.title }}
         div.ui.divider
-        div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
+        div.ui.card(ng-repeat='item in items | title: searchFilter | tag: tagFilter | state: state')
           +itemCard(item, false)
