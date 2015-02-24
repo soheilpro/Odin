@@ -251,6 +251,9 @@ router.post('/items', function(request, response) {
   if (request.param('assigned_user_ids'))
     item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
 
+  if (request.param('links'))
+    item.links = _.map(request.param('links').split(','), function(url) { return { url: url }; });
+
   var db = new DB();
   db.saveItem(item);
 
@@ -299,6 +302,12 @@ router.patch('/items/:itemId', function(request, response) {
       item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
     else
       item.assignedUsers = undefined;
+
+  if (request.param('links') !== undefined)
+    if (request.param('links') !== '')
+      item.links = _.map(request.param('links').split(','), function(url) { return { url: url }; });
+    else
+      item.links = undefined;
 
   db.saveItem(item);
 

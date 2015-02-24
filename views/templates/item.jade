@@ -21,6 +21,9 @@ div
             span(style='white-space: pre') {{ item.description }}
             br
             br
+          ul.links
+            li(ng-repeat='link in item.links')
+              a(href='{{ link.url }}') {{ link.url }}
             br
           div.assignedUsers(ng-if='item.assignedUsers.length')
             div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')

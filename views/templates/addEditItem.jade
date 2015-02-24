@@ -25,6 +25,21 @@ div
           br
           br
         div.field
+          label Links:
+          input(type='text' style='width: calc(100% - 55px); margin-right: 12px' ng-model='newLinkUrl' ng-class='{disabled: isSaving}')
+          div.ui.green.icon.button(ng-click='addLink(newLinkUrl); newLinkUrl=""' ng-class='{disabled: isSaving}')
+            i.add.icon
+          div(ng-if='item.links.length')
+            br
+            div(ng-repeat='link in item.links')
+              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removeLink(link);' ng-class='{disabled: isSaving}')
+                i.red.delete.icon
+              a(href='{{ link.url }}') {{ link.url }}
+          div(ng-if='!item.links.length')
+            br
+            span(style='color: #bbb; margin-left: 5px;') none
+      div.column
+        div.field
           label Project:
           div.ui.search.selection.dropdown(semantic-dropdown ng-model='item.project.id' ng-class='{disabled: isSaving}')
             input(type='hidden' id='project')
@@ -32,7 +47,8 @@ div
             i.dropdown.icon
             div.menu
               div.item(ng-repeat='project in projects' ng-attr-data-value='{{ project.id }}') {{ project.name }}
-      div.column
+          br
+          br
         div.field
           label Assigned To:
           div.ui.search.selection.dropdown(semantic-dropdown ng-model='item.assignedUser.id' ng-class='{disabled: isSaving}')

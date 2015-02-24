@@ -181,6 +181,9 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
     if (!item.subItems)
       item.subItems = [];
 
+    if (!item.links)
+      item.links = [];
+
     $scope.item = item;
   });
 
@@ -220,6 +223,18 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
     });
   };
 
+  $scope.addLink = function(url) {
+    $scope.item.links.push({
+      url: url
+    });
+  };
+
+  $scope.removeLink = function(link) {
+    $scope.item.links = _.reject($scope.item.links, function(item) {
+      return item.url === link.url;
+    });
+  };
+
   $scope.save = function(item) {
     $scope.isSaving = true;
 
@@ -230,7 +245,8 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
       project_id: item.project.id,
       prerequisite_item_ids: _.pluck(item.prerequisiteItems, 'id').join(),
       sub_item_ids: _.pluck(item.subItems, 'id').join(),
-      assigned_user_ids: item.assignedUser ? item.assignedUser.id : ''
+      assigned_user_ids: item.assignedUser ? item.assignedUser.id : '',
+      links: _.pluck(item.links, 'url').join()
     };
 
     $http.patch('/api/items/' + item.id, data).then(function(response) {
@@ -242,7 +258,8 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
 odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkeys', '$', '_', function($scope, $location, $http, hotkeys, $, _) {
   $scope.item = {
     prerequisiteItems: [],
-    subItems: []
+    subItems: [],
+    links: []
   };
 
   $http.get('/api/states').then(function(response) {
@@ -285,6 +302,18 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
     });
   };
 
+  $scope.addLink = function(url) {
+    $scope.item.links.push({
+      url: url
+    });
+  };
+
+  $scope.removeLink = function(link) {
+    $scope.item.links = _.reject($scope.item.links, function(item) {
+      return item.url === link.url;
+    });
+  };
+
   $scope.save = function(item) {
     $scope.isSaving = true;
 
@@ -296,7 +325,8 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
       project_id: item.project.id,
       prerequisite_item_ids: _.pluck(item.prerequisiteItems, 'id').join(),
       sub_item_ids: _.pluck(item.subItems, 'id').join(),
-      assigned_user_ids: item.assignedUser ? item.assignedUser.id : ''
+      assigned_user_ids: item.assignedUser ? item.assignedUser.id : '',
+      links: _.pluck(item.links, 'url').join()
     };
 
     $http.post('/api/items/', data).then(function(response) {
