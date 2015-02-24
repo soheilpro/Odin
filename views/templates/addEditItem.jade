@@ -32,7 +32,7 @@ div
           div(ng-if='item.links.length')
             br
             div(ng-repeat='link in item.links')
-              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removeLink(link);' ng-class='{disabled: isSaving}')
+              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removeLink($index);' ng-class='{disabled: isSaving}')
                 i.red.delete.icon
               a(href='{{ link.url }}') {{ link.url }}
           div(ng-if='!item.links.length')
@@ -77,7 +77,7 @@ div
           div(ng-if='item.prerequisiteItems.length')
             br
             div(ng-repeat='prerequisiteItem in item.prerequisiteItems' style='margin-bottom: 2px')
-              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removePrerequisiteItem(prerequisiteItem);' ng-class='{disabled: isSaving}')
+              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removePrerequisiteItem($index);' ng-class='{disabled: isSaving}')
                 i.red.delete.icon
               div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
               a(href='#/items/{{ prerequisiteItem.id }}' style='color: #444') {{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}
@@ -100,7 +100,7 @@ div
           div(ng-if='item.subItems.length')
             br
             div(ng-repeat='subItem in item.subItems' style='margin-bottom: 2px')
-              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removeSubItem(subItem);' ng-class='{disabled: isSaving}')
+              div.ui.basic.red.icon.button(style='padding: 5px; box-shadow: none !important;' ng-click='removeSubItem($index);' ng-class='{disabled: isSaving}')
                 i.red.delete.icon
               div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ subItem.state.color }} !important' ng-attr-data-title='{{ subItem.state.title }}' semantic-popup)
               a(href='#/items/{{ subItem.id }}' style='color: #444') {{ subItem.project.name }} &mdash; {{ subItem.title }}

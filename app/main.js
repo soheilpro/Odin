@@ -205,10 +205,8 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
     });
   };
 
-  $scope.removePrerequisiteItem = function(prerequisiteItem) {
-    $scope.item.prerequisiteItems = _.reject($scope.item.prerequisiteItems, function(item) {
-      return item.id === prerequisiteItem.id;
-    });
+  $scope.removePrerequisiteItem = function(itemIndex) {
+    $scope.item.prerequisiteItems.splice(itemIndex, 1);
   };
 
   $scope.addSubItem = function(itemId) {
@@ -217,10 +215,8 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
     });
   };
 
-  $scope.removeSubItem = function(subItem) {
-    $scope.item.subItems = _.reject($scope.item.subItems, function(item) {
-      return item.id === subItem.id;
-    });
+  $scope.removeSubItem = function(itemIndex) {
+    $scope.item.subItems.splice(itemIndex, 1);
   };
 
   $scope.addLink = function(url) {
@@ -229,10 +225,8 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
     });
   };
 
-  $scope.removeLink = function(link) {
-    $scope.item.links = _.reject($scope.item.links, function(item) {
-      return item.url === link.url;
-    });
+  $scope.removeLink = function(linkIndex) {
+    $scope.item.links.splice(linkIndex, 1);
   };
 
   $scope.save = function(item) {
@@ -284,10 +278,8 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
     });
   };
 
-  $scope.removePrerequisiteItem = function(prerequisiteItem) {
-    $scope.item.prerequisiteItems = _.reject($scope.item.prerequisiteItems, function(item) {
-      return item.id === prerequisiteItem.id;
-    });
+  $scope.removePrerequisiteItem = function(itemIndex) {
+    $scope.item.prerequisiteItems.splice(itemIndex, 1);
   };
 
   $scope.addSubItem = function(itemId) {
@@ -296,10 +288,8 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
     });
   };
 
-  $scope.removeSubItem = function(subItem) {
-    $scope.item.subItems = _.reject($scope.item.subItems, function(item) {
-      return item.id === subItem.id;
-    });
+  $scope.removeSubItem = function(itemIndex) {
+    $scope.item.subItems.splice(itemIndex, 1);
   };
 
   $scope.addLink = function(url) {
@@ -308,10 +298,8 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
     });
   };
 
-  $scope.removeLink = function(link) {
-    $scope.item.links = _.reject($scope.item.links, function(item) {
-      return item.url === link.url;
-    });
+  $scope.removeLink = function(linkIndex) {
+    $scope.item.links.splice(itemIndex, 1);
   };
 
   $scope.save = function(item) {
