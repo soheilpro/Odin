@@ -1,4 +1,4 @@
-var odinApp = angular.module('odinApp', ['ngRoute']);
+var odinApp = angular.module('odinApp', ['ngRoute', 'cfp.hotkeys']);
 
 odinApp.config(['$routeProvider',
   function($routeProvider) {
@@ -47,6 +47,40 @@ odinApp.factory('_', function() {
 odinApp.factory('$', function() {
   return window.$;
 });
+
+odinApp.controller('MenuController', ['$scope', '$location', 'hotkeys', function($scope, $location, hotkeys) {
+  hotkeys.bindTo($scope).add({
+    combo: 'ctrl+h',
+    description: 'Home',
+    callback: function() {
+      $location.path('/');
+    }
+  })
+
+  hotkeys.bindTo($scope).add({
+    combo: 'ctrl+p',
+    description: 'Projects',
+    callback: function() {
+      $location.path('/projects');
+    }
+  })
+
+  hotkeys.bindTo($scope).add({
+    combo: 'ctrl+u',
+    description: 'Users',
+    callback: function() {
+      $location.path('/users');
+    }
+  })
+
+  hotkeys.bindTo($scope).add({
+    combo: 'ctrl+n',
+    description: 'Add new item',
+    callback: function() {
+      $location.path('/new-item');
+    }
+  })
+}])
 
 odinApp.controller('OverviewController', ['$scope', '$http', '_', function($scope, $http, _) {
   $http.get('/api/states').then(function(response) {
@@ -103,7 +137,15 @@ odinApp.controller('ProjectController', ['$scope', '$routeParams', '$http', '_',
   });
 }])
 
-odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', function($scope, $routeParams, $http, _) {
+odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$http', 'hotkeys', '_', function($scope, $routeParams, $location, $http, hotkeys, _) {
+  hotkeys.bindTo($scope).add({
+    combo: 'ctrl+e',
+    description: 'Edit item.',
+    callback: function() {
+      $location.path('/items/' + $routeParams.itemId + '/edit');
+    }
+  })
+
   $http.get('/api/items/' + $routeParams.itemId).then(function(response) {
     $scope.item = response.data.data;
     $scope.items = $scope.item.subItems;
@@ -123,7 +165,7 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$http', '_', fu
   };
 }])
 
-odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams', '$http', '$', '_', function($scope, $location, $routeParams, $http, $, _) {
+odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams', '$http', 'hotkeys', '$', '_', function($scope, $location, $routeParams, $http, hotkeys, $, _) {
   $http.get('/api/items/' + $routeParams.itemId).then(function(response) {
     var item = response.data.data;
 
@@ -197,7 +239,7 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
   }
 }])
 
-odinApp.controller('NewItemController', ['$scope', '$location', '$http', '$', '_', function($scope, $location, $http, $, _) {
+odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkeys', '$', '_', function($scope, $location, $http, hotkeys, $, _) {
   $scope.item = {
     prerequisiteItems: [],
     subItems: []

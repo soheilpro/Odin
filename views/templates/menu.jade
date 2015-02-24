@@ -1,5 +1,5 @@
 mixin menu(activeItem)
-  div.ui.secondary.menu
+  div.ui.secondary.menu(ng-controller='MenuController')
     a.item(href='#/overview' class=activeItem == 'Overview' ? 'active' : '')
       i.home.icon
       | Overview
