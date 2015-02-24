@@ -72,7 +72,7 @@ div
               div.item(ng-repeat='item in items' ng-attr-data-value='{{ item.id }}')
                 div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ item.state.color }} !important' ng-attr-data-title='{{ item.state.title }}' semantic-popup)
                 | {{ item.project.name }} &mdash; {{ item.title }}
-          div.ui.green.icon.button(ng-click='addPrerequisiteItem(newPrerequisiteItemId);' ng-class='{disabled: isSaving}')
+          div.ui.green.icon.button(ng-click='addPrerequisiteItem(newPrerequisiteItemId); newPrerequisiteItemId = null;' ng-class='{disabled: isSaving}')
             i.add.icon
           div(ng-if='item.prerequisiteItems.length')
             br
@@ -95,7 +95,7 @@ div
               div.item(ng-repeat='item in items' ng-attr-data-value='{{ item.id }}')
                 div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ item.state.color }} !important' ng-attr-data-title='{{ item.state.title }}' semantic-popup)
                 | {{ item.project.name }} &mdash; {{ item.title }}
-          div.ui.green.icon.button(ng-click='addSubItem(newSubItemId);' ng-class='{disabled: isSaving}')
+          div.ui.green.icon.button(ng-click='addSubItem(newSubItemId); newSubItemId = null;' ng-class='{disabled: isSaving}')
             i.add.icon
           div(ng-if='item.subItems.length')
             br

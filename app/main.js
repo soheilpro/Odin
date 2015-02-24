@@ -396,9 +396,22 @@ odinApp.directive('semanticDropdown', function() {
       });
       element.dropdown('clear');
 
+      scope.$watch(attr.ngModel, function(newValue) {
+        if (newValue)
+          element.dropdown('set selected', newValue);
+        else {
+          element.dropdown('restore defaults');
+          element.dropdown('clear');
+        }
+      });
+
       setTimeout(function() {
-        if (model != null)
+        if (model && model.$modelValue)
           element.dropdown('set selected', model.$modelValue);
+        else {
+          element.dropdown('restore defaults');
+          element.dropdown('clear');
+        }
       }, 100);
     }
   };
