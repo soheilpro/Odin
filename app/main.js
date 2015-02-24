@@ -354,6 +354,17 @@ odinApp.filter('group', ['_', function(_) {
   };
 }])
 
+odinApp.directive('autofocus', ['$timeout', function($timeout) {
+  return {
+    restrict: 'A',
+    link : function($scope, $element) {
+      $timeout(function() {
+        $element[0].focus();
+      });
+    }
+  }
+}]);
+
 odinApp.directive('semanticDropdown', function() {
   return {
     require: "?ngModel",
