@@ -90,6 +90,7 @@ router.get('/projects/:projectId', function(request, response) {
 
 router.get('/projects/:projectId/items', function(request, response) {
   var db = new DB();
+  var project = db.getProjectById(request.params.projectId);
   var items = db.getItemsByProjectId(request.params.projectId);
 
   _.each(items, function(item) {
@@ -112,6 +113,14 @@ router.get('/projects/:projectId/items', function(request, response) {
       subItem.state = db.getStateById(subItem.state.id);
       item.subItems[index] = subItem
     });
+  });
+
+  items = _.sortBy(items, function(item) {
+    var index = _.findIndex(project.items, function(projectItem) {
+      return projectItem.id === item.id;
+    });
+
+    return index !== -1 ? index : Number.MAX_VALUE;
   });
 
   response.json({
