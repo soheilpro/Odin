@@ -146,9 +146,17 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$h
     }
   })
 
+  $http.get('/api/users').then(function(response) {
+    $scope.users = response.data.data;
+  });
+
   $http.get('/api/items/' + $routeParams.itemId).then(function(response) {
-    $scope.item = response.data.data;
-    $scope.items = $scope.item.subItems;
+    var item = response.data.data;
+    $scope.item = item;
+    $scope.items = item.subItems;
+
+    if (item.assignedUsers && item.assignedUsers.length > 0)
+      item.assignedUser = item.assignedUsers[0];
   });
 
   $http.get('/api/states').then(function(response) {
@@ -163,6 +171,15 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$h
     $http.patch('/api/items/' + $scope.item.id, data).then(function(response) {
     });
   };
+
+  $scope.saveAssignedUser = function() {
+    var data = {
+      assigned_user_ids: $scope.item.assignedUser ? $scope.item.assignedUser.id : ''
+    };
+
+    $http.patch('/api/items/' + $scope.item.id, data).then(function(response) {
+    });
+  };
 }])
 
 odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams', '$http', 'hotkeys', '$', '_', function($scope, $location, $routeParams, $http, hotkeys, $, _) {
@@ -171,9 +188,6 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
 
     if (item.tags)
       item.tags = item.tags.join(' ');
-
-    if (item.assignedUsers && item.assignedUsers.length > 0)
-      item.assignedUser = item.assignedUsers[0];
 
     if (!item.prerequisiteItems)
       item.prerequisiteItems = [];
@@ -193,10 +207,6 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
 
   $http.get('/api/items').then(function(response) {
     $scope.items = response.data.data;
-  });
-
-  $http.get('/api/users').then(function(response) {
-    $scope.users = response.data.data;
   });
 
   $scope.addPrerequisiteItem = function(itemId) {
@@ -239,7 +249,6 @@ odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams',
       project_id: item.project.id,
       prerequisite_item_ids: _.pluck(item.prerequisiteItems, 'id').join(),
       sub_item_ids: _.pluck(item.subItems, 'id').join(),
-      assigned_user_ids: item.assignedUser ? item.assignedUser.id : '',
       links: _.pluck(item.links, 'url').join()
     };
 
@@ -266,10 +275,6 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
 
   $http.get('/api/items').then(function(response) {
     $scope.items = response.data.data;
-  });
-
-  $http.get('/api/users').then(function(response) {
-    $scope.users = response.data.data;
   });
 
   $scope.addPrerequisiteItem = function(itemId) {
@@ -313,7 +318,6 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
       project_id: item.project.id,
       prerequisite_item_ids: _.pluck(item.prerequisiteItems, 'id').join(),
       sub_item_ids: _.pluck(item.subItems, 'id').join(),
-      assigned_user_ids: item.assignedUser ? item.assignedUser.id : '',
       links: _.pluck(item.links, 'url').join()
     };
 

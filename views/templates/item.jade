@@ -50,7 +50,17 @@ div
             div.item(ng-repeat='state in states' ng-attr-data-value='{{ state.id }}' ng-click='item.state = state; saveState();')
               div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
               | {{ state.title }}
-
+        br
+        br
+        div.ui.selection.dropdown(semantic-dropdown ng-model='item.assignedUser.id' ng-class='{disabled: isSaving}')
+          input(type='hidden')
+          div.default.text &nbsp;
+          i.dropdown.icon
+          div.menu
+            div.item(data-value='' ng-click='item.assignedUser = null; saveAssignedUser();') None
+            div.item(ng-repeat='user in users' ng-attr-data-value='{{ user.id }}' ng-click='item.assignedUser = user; saveAssignedUser();')
+              img.ui.mini.avatar.image(ng-src='/api/users/{{ user.id }}/avatar')
+              | {{ user.name }}
   div.ui.basic.segment(ng-if='item.subItems')
     div.ui.grid
       div.right.aligned.column

@@ -50,19 +50,6 @@ div
           br
           br
         div.field
-          label Assigned To:
-          div.ui.search.selection.dropdown(semantic-dropdown ng-model='item.assignedUser.id' ng-class='{disabled: isSaving}')
-            input(type='hidden')
-            div.default.text &nbsp;
-            i.dropdown.icon
-            div.menu
-              div.item(data-value='') None
-              div.item(ng-repeat='user in users' ng-attr-data-value='{{ user.id }}')
-                img.ui.mini.avatar.image(ng-src='/api/users/{{ user.id }}/avatar')
-                | {{ user.name }}
-          br
-          br
-        div.field
           label Prerequisite Items:
           div.ui.search.selection.dropdown(style='width: calc(100% - 55px); margin-right: 12px' semantic-dropdown ng-model='newPrerequisiteItemId' ng-class='{disabled: isSaving}')
             input(type='hidden')
