@@ -14,6 +14,11 @@ mixin itemCard(item, showProject)
     if showProject
       br
       a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
+  div.extra.content(ng-if='item.subItems.length')
+    div.ui.grid
+      div.four.wide.column(ng-repeat='state in states')
+        div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
+        | {{ (item.subItems | state: state).length }}
   div.extra.content(ng-if='item.assignedUsers.length')
     div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
       a(href='#/users/{{ assignedUser.id }}')
