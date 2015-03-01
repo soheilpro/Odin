@@ -360,6 +360,17 @@ odinApp.filter('title', ['_', function(_) {
   };
 }])
 
+odinApp.filter('project', ['_', function(_) {
+  return function(items, project) {
+    if (!project)
+      return items;
+
+    return _.filter(items, function(item) {
+      return item.project.id === project.id;
+    });
+  };
+}])
+
 odinApp.filter('tag', ['_', function(_) {
   return function(items, tag) {
     if (!tag)
@@ -368,6 +379,16 @@ odinApp.filter('tag', ['_', function(_) {
     return _.filter(items, function(item) {
       return _.contains(item.tags, tag);
     });
+  };
+}])
+
+odinApp.filter('projects', ['_', function(_) {
+  return function(items) {
+    return _.chain(items)
+      .map(function(item) { return item.project })
+      .uniq(function(project) { return project.id })
+      .sortBy(function(project) { return project.name })
+      .value();
   };
 }])
 

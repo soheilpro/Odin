@@ -14,13 +14,20 @@ div
         div.ui.left.icon.input(style='margin-right: 20px')
           input(type='text', placeholder='Search...' ng-model='searchFilter')
           i.search.icon
-        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right')
+        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right; margin-left: 10px')
           i.tag.icon
-          span.text No Filter
+          span.text Tag
           div.menu
             div.item(ng-click='tagFilter = null') No Filter
             div.divider
             div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
+        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right')
+          i.tag.icon
+          span.text Project
+          div.menu
+            div.item(ng-click='projectFilter = null') No Filter
+            div.divider
+            div.item(ng-repeat='project in items | projects' ng-click='$parent.projectFilter = project') {{ project.name }}
 
   div.ui.basic.segment
     div.ui.grid
@@ -28,5 +35,5 @@ div
         span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
         span.ui.header {{ state.title }}
         div.ui.divider
-        div.ui.card(ng-repeat='item in items | title: searchFilter | tag: tagFilter | state: state')
+        div.ui.card(ng-repeat='item in items | title: searchFilter | project: projectFilter | tag: tagFilter | state: state')
           +itemCard(item, true)
