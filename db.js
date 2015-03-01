@@ -3,7 +3,7 @@ var uuid = require('node-uuid');
 var _ = require('underscore');
 
 function DB() {
-  this.filename = 'db/db.json';
+  this.filename = __dirname + '/db/db.json';
   this.data = JSON.parse(fs.readFileSync(this.filename));
 }
 
