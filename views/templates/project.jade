@@ -19,6 +19,7 @@ div
           span.text Assigned User
           div.menu
             div.item(ng-click='assignedUserFilter = null') No Filter
+            div.item(ng-click='assignedUserFilter = "unassigned"') Unassigned
             div.divider
             div.item(ng-repeat='assignedUser in items | assignedUsers' ng-click='$parent.assignedUserFilter = assignedUser')
               img.ui.avatar.image(style='width: 16px; height: 16px' ng-src='/api/users/{{ assignedUser.id }}/avatar')

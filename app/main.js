@@ -376,6 +376,11 @@ odinApp.filter('assignedUser', ['_', function(_) {
     if (!assignedUser)
       return items;
 
+    if (assignedUser === 'unassigned')
+      return _.filter(items, function(item) {
+        return !item.assignedUsers || item.assignedUsers.length === 0;
+      });
+
     return _.filter(items, function(item) {
       return _.some(item.assignedUsers, function(itemAssignedUser) {
         return itemAssignedUser.id === assignedUser.id;
