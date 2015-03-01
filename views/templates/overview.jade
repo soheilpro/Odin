@@ -21,6 +21,15 @@ div
             div.item(ng-click='tagFilter = null') No Filter
             div.divider
             div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
+        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right; margin-left: 10px')
+          i.tag.icon
+          span.text Assigned User
+          div.menu
+            div.item(ng-click='assignedUserFilter = null') No Filter
+            div.divider
+            div.item(ng-repeat='assignedUser in items | assignedUsers' ng-click='$parent.assignedUserFilter = assignedUser')
+              img.ui.avatar.image(style='width: 16px; height: 16px' ng-src='/api/users/{{ assignedUser.id }}/avatar')
+              {{ assignedUser.name }}
         div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right')
           i.tag.icon
           span.text Project
@@ -35,5 +44,5 @@ div
         span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
         span.ui.header {{ state.title }}
         div.ui.divider
-        div.ui.card(ng-repeat='item in items | title: searchFilter | project: projectFilter | tag: tagFilter | state: state')
+        div.ui.card(ng-repeat='item in items | title: searchFilter | project: projectFilter | assignedUser: assignedUserFilter | tag: tagFilter | state: state')
           +itemCard(item, true)
