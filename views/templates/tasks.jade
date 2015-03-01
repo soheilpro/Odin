@@ -1,0 +1,32 @@
+include menu
+include itemCard
+
+div
+  div.ui.segment
+    +menu('Tasks')
+
+  div.ui.basic.segment
+    div.ui.grid
+      div.eight.wide.column
+          h1.ui.header
+            | Tasks
+      div.eight.wide.right.aligned.column
+        div.ui.left.icon.input(style='margin-right: 20px')
+          input(type='text', placeholder='Search...' ng-model='searchFilter')
+          i.search.icon
+        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right')
+          i.tag.icon
+          span.text No Filter
+          div.menu
+            div.item(ng-click='tagFilter = null') No Filter
+            div.divider
+            div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
+
+  div.ui.basic.segment
+    div.ui.grid
+      div.four.wide.column(ng-repeat='state in states')
+        span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
+        span.ui.header {{ state.title }}
+        div.ui.divider
+        div.ui.card(ng-repeat='item in items | title: searchFilter | tag: tagFilter | state: state')
+          +itemCard(item, true)

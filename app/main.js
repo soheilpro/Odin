@@ -7,6 +7,10 @@ odinApp.config(['$routeProvider',
       templateUrl: '/templates/overview',
       controller: 'OverviewController'
     })
+    .when('/tasks', {
+      templateUrl: '/templates/tasks',
+      controller: 'TasksController'
+    })
     .when('/users', {
       templateUrl: '/templates/users',
       controller: 'UsersController'
@@ -88,6 +92,16 @@ odinApp.controller('OverviewController', ['$scope', '$http', '_', function($scop
   });
 
   $http.get('/api/items').then(function(response) {
+    $scope.items = response.data.data;
+  });
+}])
+
+odinApp.controller('TasksController', ['$scope', '$http', '_', function($scope, $http, _) {
+  $http.get('/api/states').then(function(response) {
+    $scope.states = response.data.data;
+  });
+
+  $http.get('/api/tasks').then(function(response) {
     $scope.items = response.data.data;
   });
 }])

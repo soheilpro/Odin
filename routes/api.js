@@ -158,6 +158,57 @@ router.get('/items', function(request, response) {
   });
 });
 
+router.get('/tasks', function(request, response) {
+  var db = new DB();
+  var states = db.getStates()
+  var items = db.getItems();
+
+  var doableStateIds = _.pluck(_.filter(db.getStates(), function(state) {
+    return state.type === 'ready' ||
+           state.type === 'inprogress';
+  }), 'id');
+
+  var doneStateIds = _.pluck(_.filter(db.getStates(), function(state) {
+    return state.type === 'finished';
+  }), 'id');
+
+  items = _.filter(items, function(item) {
+    return _.contains(doableStateIds, item.state.id);
+  });
+
+  _.each(items, function(item) {
+    item.state = db.getStateById(item.state.id);
+    item.project = db.getProjectById(item.project.id);
+
+    _.each(item.assignedUsers, function(assignedUser, index) {
+      item.assignedUsers[index] = db.getUserById(assignedUser.id);
+    });
+
+    _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
+      var prerequisiteItem = db.getItemById(prerequisiteItem.id);
+      prerequisiteItem.project = db.getProjectById(prerequisiteItem.project.id);
+      prerequisiteItem.state = db.getStateById(prerequisiteItem.state.id);
+      item.prerequisiteItems[index] = prerequisiteItem
+    });
+
+    _.each(item.subItems, function(subItem, index) {
+      var subItem = db.getItemById(subItem.id);
+      subItem.state = db.getStateById(subItem.state.id);
+      item.subItems[index] = subItem
+    });
+  });
+
+  items = _.filter(items, function(item) {
+    return _.every(item.prerequisiteItems, function(prerequisiteItem) {
+      return _.contains(doneStateIds, prerequisiteItem.state.id);
+    });
+  });
+
+  response.json({
+    data: items
+  });
+});
+
 router.get('/items/:itemId', function(request, response) {
   var db = new DB();
   var item = db.getItemById(request.params.itemId);

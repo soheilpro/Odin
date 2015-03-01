@@ -3,6 +3,9 @@ mixin menu(activeItem)
     a.item(href='#/overview' class=activeItem == 'Overview' ? 'active' : '')
       i.home.icon
       | Overview
+    a.item(href='#/tasks' class=activeItem == 'Tasks' ? 'active' : '')
+      i.browser.icon
+      | Tasks
     a.item(href='#/projects' class=activeItem == 'Projects' ? 'active' : '')
       i.folder.icon
       | Projects

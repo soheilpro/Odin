@@ -5,6 +5,10 @@ router.get('/overview', function(request, response) {
   response.render('templates/overview');
 });
 
+router.get('/tasks', function(request, response) {
+  response.render('templates/tasks');
+});
+
 router.get('/users', function(request, response) {
   response.render('templates/users');
 });
