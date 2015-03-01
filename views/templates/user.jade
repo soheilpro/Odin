@@ -7,27 +7,27 @@ div
 
   div.ui.basic.segment
     div.ui.grid
-      div.eight.wide.column
+      div.four.wide.column
           h1.ui.header
             | {{ user.name }}
-      div.eight.wide.right.aligned.column
-        div.ui.left.icon.input(style='margin-right: 20px')
+      div.twelve.wide.right.aligned.column
+        div.ui.left.icon.input
           input(type='text', placeholder='Search...' ng-model='searchFilter')
           i.search.icon
-        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right; margin-left: 10px')
+        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='margin-left: 10px')
+          i.folder.icon
+          span.text Project
+          div.menu
+            div.item(ng-click='projectFilter = null') No Filter
+            div.divider
+            div.item(ng-repeat='project in items | projects' ng-click='$parent.projectFilter = project') {{ project.name }}
+        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='margin-left: 10px')
           i.tag.icon
           span.text Tag
           div.menu
             div.item(ng-click='tagFilter = null') No Filter
             div.divider
             div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
-        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right')
-          i.tag.icon
-          span.text Project
-          div.menu
-            div.item(ng-click='projectFilter = null') No Filter
-            div.divider
-            div.item(ng-repeat='project in items | projects' ng-click='$parent.projectFilter = project') {{ project.name }}
 
   div.ui.basic.segment
     div.ui.grid
