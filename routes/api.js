@@ -376,4 +376,41 @@ router.patch('/items/:itemId', function(request, response) {
   });
 });
 
+router.put('/items/:itemId/state', function(request, response) {
+  var db = new DB();
+  var item = db.getItemById(request.params.itemId);
+  var oldState = db.getStateById(item.state.id);
+  var newState = db.getStateById(request.param('state_id'));
+
+  item.state = {
+    id: newState.id
+  };
+
+  db.saveItem(item);
+
+  if (oldState.type === 'pending' && newState.type === 'ready') {
+    function updatePrerequisiteItems(item) {
+      _.each(item.prerequisiteItems, function(prerequisiteItem) {
+        prerequisiteItem = db.getItemById(prerequisiteItem.id);
+
+        if (db.getStateById(prerequisiteItem.state.id).type === 'pending') {
+          prerequisiteItem.state = {
+            id: newState.id
+          };
+
+          db.saveItem(prerequisiteItem);
+        }
+
+        updatePrerequisiteItems(prerequisiteItem);
+      });
+    }
+
+    updatePrerequisiteItems(item);
+  }
+
+  response.json({
+    data: item
+  });
+});
+
 module.exports = router;

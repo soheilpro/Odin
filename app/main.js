@@ -182,7 +182,7 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$h
       state_id: $scope.item.state.id,
     };
 
-    $http.patch('/api/items/' + $scope.item.id, data).then(function(response) {
+    $http.put('/api/items/' + $scope.item.id + '/state', data).then(function(response) {
     });
   };
 
