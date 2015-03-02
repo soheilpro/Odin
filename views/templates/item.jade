@@ -33,9 +33,10 @@ div
             br
           div(ng-if='item.prerequisiteItems.length')
             div.ui.tiny.header Prerequisites:
-            div(ng-repeat='prerequisiteItem in item.prerequisiteItems' style='margin-bottom: 2px')
-              div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
-              a(href='#/items/{{ prerequisiteItem.id }}' style='color: #444') {{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}
+            script(type='text/ng-template', id='prerequisite_item_template.html').
+              <div style="margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important" ng-attr-data-title="{{ prerequisiteItem.state.title }}" semantic-popup="semantic-popup" class="ui black empty circular label"></div><a href="#/items/{{ prerequisiteItem.id }}" style="color: #444">{{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}</a>
+                <div style='margin-top: 5px; margin-left: 15px' ng-repeat='prerequisiteItem in prerequisiteItem.prerequisiteItems' ng-include="'prerequisite_item_template.html'"></div>
+            div(style='margin-top: 5px;' ng-repeat='prerequisiteItem in item.prerequisiteItems' ng-include="'prerequisite_item_template.html'")
       div.eight.wide.right.aligned.column
         a.ui.button(href='#/items/{{ item.id }}/edit')
           i.pencil.icon
