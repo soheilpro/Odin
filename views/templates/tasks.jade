@@ -1,4 +1,5 @@
 include menu
+include filters
 include itemCard
 
 div
@@ -11,33 +12,7 @@ div
           h1.ui.header
             | Tasks
       div.twelve.wide.right.aligned.column
-        div.ui.left.icon.input
-          input(type='text', placeholder='Search...' ng-model='searchFilter')
-          i.search.icon
-        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='margin-left: 10px')
-          i.folder.icon
-          span.text Project
-          div.menu
-            div.item(ng-click='projectFilter = null') No Filter
-            div.divider
-            div.item(ng-repeat='project in items | projects' ng-click='$parent.projectFilter = project') {{ project.name }}
-        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='margin-left: 10px')
-          i.user.icon
-          span.text Assigned User
-          div.menu
-            div.item(ng-click='assignedUserFilter = null') No Filter
-            div.item(ng-click='assignedUserFilter = "unassigned"') Unassigned
-            div.divider
-            div.item(ng-repeat='assignedUser in items | assignedUsers' ng-click='$parent.assignedUserFilter = assignedUser')
-              img.ui.avatar.image(style='width: 16px; height: 16px' ng-src='/api/users/{{ assignedUser.id }}/avatar')
-              {{ assignedUser.name }}
-        div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='margin-left: 10px')
-          i.tag.icon
-          span.text Tag
-          div.menu
-            div.item(ng-click='tagFilter = null') No Filter
-            div.divider
-            div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
+        +filters({ showSearchFilter: true, showProjectFilter: true, showAssignedUserFilter: true, showTagFilter: true })
 
   div.ui.basic.segment
     div.ui.grid
