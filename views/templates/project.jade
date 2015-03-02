@@ -22,3 +22,7 @@ div
         div.ui.divider
         div.ui.card(ng-repeat='item in items | title: searchFilter | assignedUser: assignedUserFilter | tag: tagFilter | state: state')
           +itemCard(item, false)
+        form(ng-submit='addSubItem(newSubItem.title, state); newSubItem.title = null;')
+          div.ui.left.icon.input
+            input(type='text' id='title' placeholder='Add new item...' style='width: 290px' ng-model='newSubItem.title')
+            i.add.icon

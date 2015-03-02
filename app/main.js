@@ -149,6 +149,22 @@ odinApp.controller('ProjectController', ['$scope', '$routeParams', '$http', '_',
   $http.get('/api/projects/' + $routeParams.projectId + '/items').then(function(response) {
     $scope.items = response.data.data;
   });
+
+  $scope.addSubItem = function(title, state) {
+    if (!title)
+      return;
+
+    var data = {
+      title: title,
+      state_id: state.id,
+      project_id: $scope.project.id
+    };
+
+    $http.post('/api/items', data).then(function(response) {
+      var newItem = response.data.data;
+      $scope.items.push(newItem);
+    });
+  }
 }])
 
 odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$http', 'hotkeys', '_', function($scope, $routeParams, $location, $http, hotkeys, _) {
@@ -194,6 +210,29 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$h
     $http.patch('/api/items/' + $scope.item.id, data).then(function(response) {
     });
   };
+
+  $scope.addSubItem = function(title, state) {
+    if (!title)
+      return;
+
+    var data = {
+      title: title,
+      state_id: state.id,
+      project_id: $scope.item.project.id
+    };
+
+    $http.post('/api/items', data).then(function(response) {
+      var newItem = response.data.data;
+
+      var data = {
+        item_id: newItem.id
+      };
+
+      $http.post('/api/items/' + $scope.item.id + '/subitems', data).then(function(response) {
+        $scope.items.push(newItem);
+      });
+    });
+  }
 }])
 
 odinApp.controller('EditItemController', ['$scope', '$location', '$routeParams', '$http', 'hotkeys', '$', '_', function($scope, $location, $routeParams, $http, hotkeys, $, _) {

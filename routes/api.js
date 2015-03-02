@@ -282,6 +282,22 @@ router.put('/items/:itemId/state', function(request, response) {
   });
 });
 
+router.post('/items/:itemId/subitems', function(request, response) {
+  var db = new DB();
+  var item = db.getItemById(request.params.itemId);
+
+  if (!item.subItems)
+    item.subItems = [];
+
+  item.subItems.push({
+    id: request.param('item_id')
+  });
+
+  db.saveItem(item);
+
+  response.sendStatus(200);
+});
+
 module.exports = router;
 
 function expandItem(item, db) {

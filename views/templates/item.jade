@@ -62,7 +62,7 @@ div
             div.item(ng-repeat='user in users' ng-attr-data-value='{{ user.id }}' ng-click='item.assignedUser = user; saveAssignedUser();')
               img.ui.mini.avatar.image(ng-src='/api/users/{{ user.id }}/avatar')
               | {{ user.name }}
-  div.ui.basic.segment(ng-if='item.subItems')
+  div.ui.basic.segment
     div.ui.grid
       div.right.aligned.column
         div.ui.top.right.pointing.dropdown.icon.labeled.button(semantic-dropdown style='float: right')
@@ -79,3 +79,7 @@ div
         div.ui.divider
         div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
           +itemCard(item, true)
+        form(ng-submit='addSubItem(newSubItem.title, state); newSubItem.title = null;')
+          div.ui.left.icon.input
+            input(type='text' id='title' placeholder='Add new item...' style='width: 290px' ng-model='newSubItem.title')
+            i.add.icon
