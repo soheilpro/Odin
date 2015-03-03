@@ -16,10 +16,8 @@ mixin itemCard(item, showProject)
         br
         a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
     div.extra.content(ng-if='item.subItems.length')
-      div.ui.grid
-        div.four.wide.column(ng-repeat='state in states')
-          div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
-          | {{ (item.subItems | state: state).length }}
+      div.ui.grid(style='margin: 0')
+        div.column(style='padding: 0px; height: 10px; width: {{ (item.subItems | state: state).length / item.subItems.length * 100 }}%; background-color: {{ state.color }}' ng-repeat='state in states' ng-attr-data-title='{{ state.title }} ({{ (item.subItems | state: state).length }})' semantic-popup)
     div.extra.content
       div.ui.dropdown(semantic-dropdown)
         div.text State
