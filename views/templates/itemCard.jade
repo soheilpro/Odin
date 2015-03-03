@@ -1,25 +1,33 @@
 mixin itemCard(item, showProject)
-  div.content
-    a.header(href='#/items/{{ item.id }}') {{ item.title }}
-    div.description(ng-if='item.description') {{ item.description }}
-    div.tags(ng-if='item.tags.length')
-      br
-      span.ui.label(ng-repeat='tag in item.tags') {{ tag }}
-    div(ng-if='item.prerequisiteItems.length')
-      br
-      div.ui.tiny.header Prerequisites:
-      div(ng-repeat='prerequisiteItem in item.prerequisiteItems' style='margin-bottom: 2px')
-        div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
-        a(href='#/items/{{ prerequisiteItem.id }}' style='color: #444') {{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}
-    if showProject
-      br
-      a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
-  div.extra.content(ng-if='item.subItems.length')
-    div.ui.grid
-      div.four.wide.column(ng-repeat='state in states')
-        div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
-        | {{ (item.subItems | state: state).length }}
-  div.extra.content(ng-if='item.assignedUsers.length')
-    div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
-      a(href='#/users/{{ assignedUser.id }}')
-        img.ui.avatar.image(ng-src='/api/users/{{ assignedUser.id }}/avatar' ng-attr-data-title='{{ assignedUser.name }}' semantic-popup)
+  div.ui.card(ng-controller='ItemCardController')
+    div.content
+      a.header(href='#/items/{{ item.id }}') {{ item.title }}
+      div.description(ng-if='item.description') {{ item.description }}
+      div.tags(ng-if='item.tags.length')
+        br
+        span.ui.label(ng-repeat='tag in item.tags') {{ tag }}
+      div(ng-if='item.prerequisiteItems.length')
+        br
+        div.ui.tiny.header Prerequisites:
+        div(ng-repeat='prerequisiteItem in item.prerequisiteItems' style='margin-bottom: 2px')
+          div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ prerequisiteItem.state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
+          a(href='#/items/{{ prerequisiteItem.id }}' style='color: #444') {{ prerequisiteItem.project.name }} &mdash; {{ prerequisiteItem.title }}
+      if showProject
+        br
+        a.ui.label(href='#/projects/{{ item.project.id }}' style='float: right') {{ item.project.name }}
+    div.extra.content(ng-if='item.subItems.length')
+      div.ui.grid
+        div.four.wide.column(ng-repeat='state in states')
+          div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important' ng-attr-data-title='{{ prerequisiteItem.state.title }}' semantic-popup)
+          | {{ (item.subItems | state: state).length }}
+    div.extra.content
+      div.ui.dropdown(semantic-dropdown)
+        div.text State
+        i.dropdown.icon
+        div.menu
+          div.item(ng-repeat='state in states' ng-if='state.id !== item.state.id' ng-attr-data-value='{{ state.id }}' ng-click='item.state = state; saveItemState(item);')
+            div.ui.black.empty.circular.label(style='margin-right: 5px; background-color: {{ state.color }} !important')
+            | {{ state.title }}
+      div.right.floated.author(ng-repeat='assignedUser in item.assignedUsers')
+        a(href='#/users/{{ assignedUser.id }}')
+          img.ui.avatar.image(ng-src='/api/users/{{ assignedUser.id }}/avatar' ng-attr-data-title='{{ assignedUser.name }}' semantic-popup)

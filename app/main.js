@@ -193,15 +193,6 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$h
     $scope.states = response.data.data;
   });
 
-  $scope.saveState = function() {
-    var data = {
-      state_id: $scope.item.state.id,
-    };
-
-    $http.put('/api/items/' + $scope.item.id + '/state', data).then(function(response) {
-    });
-  };
-
   $scope.saveAssignedUser = function() {
     var data = {
       assigned_user_ids: $scope.item.assignedUser ? $scope.item.assignedUser.id : ''
@@ -378,6 +369,17 @@ odinApp.controller('NewItemController', ['$scope', '$location', '$http', 'hotkey
       $location.path('/items/' + response.data.data.id);
     });
   }
+}])
+
+odinApp.controller('ItemCardController', ['$scope', '$http', function($scope, $http) {
+  $scope.saveItemState = function(item) {
+    var data = {
+      state_id: item.state.id,
+    };
+
+    $http.put('/api/items/' + item.id + '/state', data).then(function(response) {
+    });
+  };
 }])
 
 odinApp.filter('state', ['_', function(_) {

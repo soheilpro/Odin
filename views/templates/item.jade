@@ -48,7 +48,7 @@ div
           div.default.text &nbsp;
           i.dropdown.icon
           div.menu
-            div.item(ng-repeat='state in states' ng-attr-data-value='{{ state.id }}' ng-click='item.state = state; saveState();')
+            div.item(ng-repeat='state in states' ng-attr-data-value='{{ state.id }}' ng-click='item.state = state; saveItemState(item);')
               div.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
               | {{ state.title }}
         br
@@ -77,7 +77,7 @@ div
         span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
         span.ui.header {{ state.title }}
         div.ui.divider
-        div.ui.card(ng-repeat='item in items | tag: tagFilter | state: state')
+        div(style='margin-bottom: 20px' ng-repeat='item in items | tag: tagFilter | state: state')
           +itemCard(item, true)
         form(ng-submit='addSubItem(newSubItem.title, state); newSubItem.title = null;')
           div.ui.left.icon.input
