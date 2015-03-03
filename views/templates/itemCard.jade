@@ -1,5 +1,5 @@
 mixin itemCard(item, showProject)
-  div.ui.card(ng-controller='ItemCardController')
+  div.ui.card(style='border-top: 2px solid {{ item.state.color }}' ng-controller='ItemCardController')
     div.content
       a.header(href='#/items/{{ item.id }}') {{ item.title }}
       div.description(ng-if='item.description') {{ item.description }}
