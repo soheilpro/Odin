@@ -193,6 +193,15 @@ odinApp.controller('ItemController', ['$scope', '$routeParams', '$location', '$h
     $scope.states = response.data.data;
   });
 
+  $scope.saveItemState = function(item) {
+    var data = {
+      state_id: item.state.id,
+    };
+
+    $http.put('/api/items/' + item.id + '/state', data).then(function(response) {
+    });
+  };
+
   $scope.saveAssignedUser = function() {
     var data = {
       assigned_user_ids: $scope.item.assignedUser ? $scope.item.assignedUser.id : ''
