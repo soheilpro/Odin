@@ -2,7 +2,7 @@ mixin itemCard(item, showProject)
   div.ui.card(style='border-top: 2px solid {{ item.state.color }}' ng-controller='ItemCardController')
     div.content
       a.header(href='#/items/{{ item.id }}') {{ item.title }}
-      div.description(ng-if='item.description') {{ item.description }}
+      i.chat.icon(style='color: #ddd' ng-if='item.description')
       div.tags(ng-if='item.tags.length')
         br
         span.ui.label(ng-repeat='tag in item.tags') {{ tag }}
