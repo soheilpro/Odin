@@ -1,5 +1,5 @@
 include menu
-include itemCard
+include board
 
 div
   div.ui.segment
@@ -72,14 +72,4 @@ div
             div.item(ng-click='tagFilter = null') No Filter
             div.divider
             div.item(ng-repeat='tag in items | tags' ng-click='$parent.tagFilter = tag') {{ tag }}
-    div.ui.grid
-      div.four.wide.column(ng-repeat='state in states')
-        span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
-        span.ui.header {{ state.title }}
-        div.ui.divider
-        div(style='margin-bottom: 20px' ng-repeat='item in items | tag: tagFilter | state: state')
-          +itemCard(item, true)
-        form(ng-submit='addSubItem(newSubItem.title, state); newSubItem.title = null;')
-          div.ui.left.icon.input
-            input(type='text' id='title' placeholder='Add new item...' style='width: 290px' ng-model='newSubItem.title')
-            i.add.icon
+    +board({ showProject: true, showAddSubItemForm: true })

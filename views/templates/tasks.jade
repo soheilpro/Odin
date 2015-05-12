@@ -1,6 +1,6 @@
 include menu
 include filters
-include itemCard
+include board
 
 div
   div.ui.segment
@@ -14,11 +14,4 @@ div
       div.twelve.wide.right.aligned.column
         +filters({ showSearchFilter: true, showProjectFilter: true, showAssignedUserFilter: true, showTagFilter: true })
 
-  div.ui.basic.segment
-    div.ui.grid
-      div.four.wide.column(ng-repeat='state in states')
-        span.ui.black.empty.circular.label(style='margin-left: 10px; margin-right: 5px; background-color: {{ state.color }} !important')
-        span.ui.header {{ state.title }}
-        div.ui.divider
-        div(style='margin-bottom: 20px' ng-repeat='item in items | title: searchFilter | project: projectFilter | assignedUser: assignedUserFilter | tag: tagFilter | state: state')
-          +itemCard(item, true)
+  +board({ showProject: true })
