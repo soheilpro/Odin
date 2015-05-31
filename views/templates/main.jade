@@ -1,0 +1,51 @@
+.container
+  .row
+    .column
+      br
+
+.container
+  .row
+    .two.columns.sidebar
+      br
+
+      div
+        a(href='' ng-click='filter.clear()') All Items
+      br
+
+      label State
+      div.filter(ng-repeat='state in states')
+        input(type='checkbox' ng-class='{visible: $parent.filter.states.has(state)}' ng-model='checked' ng-checked='$parent.filter.states.has(state)' ng-click='$parent.filter.states.toggle(state, checked)')
+        a(href='' ng-click='$parent.filter.states.set(state)') {{ state.title }}
+      br
+
+      label Assignee
+      div.filter(ng-repeat='user in users')
+        input(type='checkbox' ng-class='{visible: $parent.filter.assignedUsers.has(user)}' ng-model='checked' ng-checked='$parent.filter.assignedUsers.has(user)' ng-click='$parent.filter.assignedUsers.toggle(user, checked)')
+        a(href='' ng-click='$parent.filter.assignedUsers.set(user)') {{ user.name }}
+      br
+
+      label Project
+      div.filter(ng-repeat='project in projects')
+        input(type='checkbox' ng-class='{visible: $parent.filter.projects.has(project)}' ng-model='checked' ng-checked='$parent.filter.projects.has(project)' ng-click='$parent.filter.projects.toggle(project, checked)')
+        a(href='' ng-click='$parent.filter.projects.set(project)') {{ project.name }}
+      br
+
+    .ten.columns
+      table.items
+        tr
+          th Project
+          th Title
+          th Milestone
+          th State
+          th Assignee
+        tr(ng-repeat='item in items | states: filter.states.items | assignedUsers: filter.assignedUsers.items | projects: filter.projects.items')
+          td.project
+            span {{ item.project.name }}
+          td.title
+            span(class='state-{{item.state.type}}') {{ item.title }}
+          td.milestone
+            span
+          td.state
+            span {{ item.state.title }}
+          td.assigned-user
+            span {{ item.assignedUsers[0].name }}

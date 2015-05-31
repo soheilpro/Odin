@@ -1,0 +1,79 @@
+body {
+  font-size: 1.3em;
+}
+
+.sidebar label {
+  display: block;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.sidebar .filter {
+  padding: 2px 4px;
+  margin-left: -20px;
+}
+
+.sidebar .filter:hover {
+  background-color: #f6f6f6;
+}
+
+.sidebar .filter input {
+  margin: 0 5px 0 0;
+  visibility: hidden;
+}
+
+.sidebar .filter:hover input {
+  visibility: visible;
+}
+
+.sidebar .filter input.visible {
+  visibility: visible;
+}
+
+.sidebar a {
+  text-transform: lowercase;
+}
+
+table.items {
+  width: 100%;
+}
+
+table.items th,
+table.items td {
+  padding: 4px 6px;
+}
+
+table.items tr:hover td {
+  background-color: #f6f6f6;
+}
+
+table.items td.title span {
+  padding: 2px 4px;
+}
+
+table.items td.project span {
+  text-transform: lowercase;
+}
+
+table.items td.title span.state-pending {
+}
+
+table.items td.title span.state-ready {
+  background-color: #ffe0b2;
+}
+
+table.items td.title span.state-inprogress {
+  background-color: #b3e5fc;
+}
+
+table.items td.title span.state-finished {
+  background-color: #c5e1a5;
+}
+
+table.items td.state span {
+  text-transform: lowercase;
+}
+
+table.items td.assigned-user span {
+  text-transform: lowercase;
+}
