@@ -1,0 +1,7 @@
+table.items {
+	direction: rtl;
+}
+
+table.items td.title {
+	text-align: right;
+}
