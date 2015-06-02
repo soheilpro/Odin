@@ -1,7 +1,7 @@
-table.items {
+table.issues {
 	direction: rtl;
 }
 
-table.items td.title {
+table.issues td.title {
 	text-align: right;
 }

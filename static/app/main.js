@@ -35,7 +35,9 @@ odinApp.controller('MainController', ['$scope', '$http', '_', function($scope, $
   });
 
   $http.get('/api/items').then(function(response) {
-    $scope.items = response.data.data;
+    $scope.issues = _.filter(response.data.data, function(item) {
+      return item.type === 'issue';
+    });
   });
 
   $scope.filter = new Filter();

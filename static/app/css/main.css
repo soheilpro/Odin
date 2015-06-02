@@ -34,46 +34,46 @@ body {
   text-transform: lowercase;
 }
 
-table.items {
+table.issues {
   width: 100%;
 }
 
-table.items th,
-table.items td {
+table.issues th,
+table.issues td {
   padding: 4px 6px;
 }
 
-table.items tr:hover td {
+table.issues tr:hover td {
   background-color: #f6f6f6;
 }
 
-table.items td.title span {
+table.issues td.title span {
   padding: 2px 4px;
 }
 
-table.items td.project span {
+table.issues td.project span {
   text-transform: lowercase;
 }
 
-table.items td.title span.state-pending {
+table.issues td.title span.state-pending {
 }
 
-table.items td.title span.state-ready {
+table.issues td.title span.state-ready {
   background-color: #ffe0b2;
 }
 
-table.items td.title span.state-inprogress {
+table.issues td.title span.state-inprogress {
   background-color: #b3e5fc;
 }
 
-table.items td.title span.state-finished {
+table.issues td.title span.state-finished {
   background-color: #c5e1a5;
 }
 
-table.items td.state span {
+table.issues td.state span {
   text-transform: lowercase;
 }
 
-table.items td.assigned-user span {
+table.issues td.assigned-user span {
   text-transform: lowercase;
 }

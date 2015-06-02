@@ -162,6 +162,11 @@ router.post('/items', function(request, response) {
     },
   };
 
+  if (request.param('type'))
+    item.type = request.param('type');
+  else
+    item.type = 'issue';
+
   if (request.param('tags'))
     item.tags = request.param('tags').split(' ');
 
@@ -303,6 +308,9 @@ module.exports = router;
 function expandItem(item, db) {
   item.state = db.getStateById(item.state.id);
   item.project = db.getProjectById(item.project.id);
+
+  if (!item.type)
+    item.type = 'issue';
 
   if (!item.description)
     item.description = '';

@@ -31,21 +31,21 @@
       br
 
     .ten.columns
-      table.items
+      table.issues
         tr
           th Project
           th Title
           th Milestone
           th State
           th Assignee
-        tr(ng-repeat='item in items | states: filter.states.items | assignedUsers: filter.assignedUsers.items | projects: filter.projects.items')
+        tr(ng-repeat='issue in issues | states: filter.states.items | assignedUsers: filter.assignedUsers.items | projects: filter.projects.items')
           td.project
-            span {{ item.project.name }}
+            span {{ issue.project.name }}
           td.title
-            span(class='state-{{item.state.type}}') {{ item.title }}
+            span(class='state-{{issue.state.type}}') {{ issue.title }}
           td.milestone
             span
           td.state
-            span {{ item.state.title }}
+            span {{ issue.state.title }}
           td.assigned-user
-            span {{ item.assignedUsers[0].name }}
+            span {{ issue.assignedUsers[0].name }}
