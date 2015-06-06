@@ -38,9 +38,36 @@ odinApp.controller('MainController', ['$scope', '$http', '_', function($scope, $
     $scope.issues = _.filter(response.data.data, function(item) {
       return item.type === 'issue';
     });
+
+    $scope.milestones = _.filter(response.data.data, function(item) {
+      return item.type === 'milestone';
+    });
+
+    $scope.milestones.forEach(function(milestone) {
+      milestone.subItems.forEach(function(item) {
+        var issue = _.find($scope.issues, function(issue) {
+          return issue.id === item.id;
+        });
+
+        issue.milestone = milestone;
+      });
+    });
   });
 
   $scope.filter = new Filter();
+}])
+
+odinApp.filter('milestones', ['_', function(_) {
+  return function(items, milestones) {
+    if (milestones.length === 0)
+      return items;
+
+    return _.filter(items, function(item) {
+      return _.some(milestones, function(milestone) {
+        return item.milestone && item.milestone.id === milestone.id;
+      });
+    });
+  };
 }])
 
 odinApp.filter('states', ['_', function(_) {
@@ -89,12 +116,14 @@ function Filter() {
     return item1.id === item2.id;
   };
 
+  this.milestones = new Set(idComparer);
   this.states = new Set(idComparer);
   this.assignedUsers = new Set(idComparer);
   this.projects = new Set(idComparer);
 }
 
 Filter.prototype.clear = function() {
+  this.milestones.clear();
   this.states.clear();
   this.assignedUsers.clear();
   this.projects.clear();

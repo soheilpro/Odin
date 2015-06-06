@@ -12,6 +12,12 @@
         a(href='' ng-click='filter.clear()') All Items
       br
 
+      label Milestones
+      div.filter(ng-repeat='milestone in milestones')
+        input(type='checkbox' ng-class='{visible: $parent.filter.milestones.has(milestone)}' ng-model='checked' ng-checked='$parent.filter.milestones.has(milestone)' ng-click='$parent.filter.milestones.toggle(milestone, checked)')
+        a(href='' ng-click='$parent.filter.milestones.set(milestone)') {{ milestone.title }}
+      br
+
       label State
       div.filter(ng-repeat='state in states')
         input(type='checkbox' ng-class='{visible: $parent.filter.states.has(state)}' ng-model='checked' ng-checked='$parent.filter.states.has(state)' ng-click='$parent.filter.states.toggle(state, checked)')
@@ -38,13 +44,13 @@
           th Milestone
           th State
           th Assignee
-        tr(ng-repeat='issue in issues | states: filter.states.items | assignedUsers: filter.assignedUsers.items | projects: filter.projects.items')
+        tr(ng-repeat='issue in issues | milestones: filter.milestones.items | states: filter.states.items | assignedUsers: filter.assignedUsers.items | projects: filter.projects.items')
           td.project
             span {{ issue.project.name }}
           td.title
             span(class='state-{{issue.state.type}}') {{ issue.title }}
           td.milestone
-            span
+            span {{ issue.milestone.title }}
           td.state
             span {{ issue.state.title }}
           td.assigned-user
