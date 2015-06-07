@@ -15,25 +15,25 @@
       label Milestones
       div.filter(ng-repeat='milestone in milestones')
         input(type='checkbox' ng-class='{visible: $parent.filter.milestones.has(milestone)}' ng-model='checked' ng-checked='$parent.filter.milestones.has(milestone)' ng-click='$parent.filter.milestones.toggle(milestone, checked)')
-        a(href='' ng-click='$parent.filter.milestones.set(milestone)') {{ milestone.title }}
+        a(href='' ng-click='filter.clear(); $parent.filter.milestones.set(milestone)') {{ milestone.title }}
       br
 
       label State
       div.filter(ng-repeat='state in states')
         input(type='checkbox' ng-class='{visible: $parent.filter.states.has(state)}' ng-model='checked' ng-checked='$parent.filter.states.has(state)' ng-click='$parent.filter.states.toggle(state, checked)')
-        a(href='' ng-click='$parent.filter.states.set(state)') {{ state.title }}
+        a(href='' ng-click='filter.clear(); $parent.filter.states.set(state)') {{ state.title }}
       br
 
       label Assignee
       div.filter(ng-repeat='user in users')
         input(type='checkbox' ng-class='{visible: $parent.filter.assignedUsers.has(user)}' ng-model='checked' ng-checked='$parent.filter.assignedUsers.has(user)' ng-click='$parent.filter.assignedUsers.toggle(user, checked)')
-        a(href='' ng-click='$parent.filter.assignedUsers.set(user)') {{ user.name }}
+        a(href='' ng-click='filter.clear(); $parent.filter.assignedUsers.set(user)') {{ user.name }}
       br
 
       label Project
       div.filter(ng-repeat='project in projects')
         input(type='checkbox' ng-class='{visible: $parent.filter.projects.has(project)}' ng-model='checked' ng-checked='$parent.filter.projects.has(project)' ng-click='$parent.filter.projects.toggle(project, checked)')
-        a(href='' ng-click='$parent.filter.projects.set(project)') {{ project.name }}
+        a(href='' ng-click='filter.clear(); $parent.filter.projects.set(project)') {{ project.name }}
       br
 
     .ten.columns
