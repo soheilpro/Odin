@@ -14,26 +14,30 @@
 
       label Milestones
       div.filter(ng-repeat='milestone in milestones')
-        input(type='checkbox' ng-class='{visible: $parent.filter.milestones.has(milestone)}' ng-model='checked' ng-checked='$parent.filter.milestones.has(milestone)' ng-click='$parent.filter.milestones.toggle(milestone, checked)')
-        a(href='' ng-click='filter.clear(); $parent.filter.milestones.set(milestone)') {{ milestone.title }}
+        input(type='checkbox' ng-class='{visible: $parent.filter.milestones.exclude.has(milestone)}' ng-model='checked_exclude' ng-checked='$parent.filter.milestones.exclude.has(milestone)' ng-click='$parent.filter.milestones.exclude.toggle(milestone, checked_exclude)')
+        input(type='checkbox' ng-class='{visible: $parent.filter.milestones.include.has(milestone)}' ng-model='checked_include' ng-checked='$parent.filter.milestones.include.has(milestone)' ng-click='$parent.filter.milestones.include.toggle(milestone, checked_include)')
+        a(href='' ng-click='filter.clear(); $parent.filter.milestones.include.set(milestone)') {{ milestone.title }}
       br
 
       label State
       div.filter(ng-repeat='state in states')
-        input(type='checkbox' ng-class='{visible: $parent.filter.states.has(state)}' ng-model='checked' ng-checked='$parent.filter.states.has(state)' ng-click='$parent.filter.states.toggle(state, checked)')
-        a(href='' ng-click='filter.clear(); $parent.filter.states.set(state)') {{ state.title }}
+        input(type='checkbox' ng-class='{visible: $parent.filter.states.exclude.has(state)}' ng-model='checked_exclude' ng-checked='$parent.filter.states.exclude.has(state)' ng-click='$parent.filter.states.exclude.toggle(state, checked_exclude)')
+        input(type='checkbox' ng-class='{visible: $parent.filter.states.include.has(state)}' ng-model='checked_include' ng-checked='$parent.filter.states.include.has(state)' ng-click='$parent.filter.states.include.toggle(state, checked_include)')
+        a(href='' ng-click='filter.clear(); $parent.filter.states.include.set(state); $parent.filter.states.exclude.clear()') {{ state.title }}
       br
 
       label Assignee
       div.filter(ng-repeat='user in users')
-        input(type='checkbox' ng-class='{visible: $parent.filter.assignedUsers.has(user)}' ng-model='checked' ng-checked='$parent.filter.assignedUsers.has(user)' ng-click='$parent.filter.assignedUsers.toggle(user, checked)')
-        a(href='' ng-click='filter.clear(); $parent.filter.assignedUsers.set(user)') {{ user.name }}
+        input(type='checkbox' ng-class='{visible: $parent.filter.assignedUsers.exclude.has(user)}' ng-model='checked_exclude' ng-checked='$parent.filter.assignedUsers.exclude.has(user)' ng-click='$parent.filter.assignedUsers.exclude.toggle(user, checked_exclude)')
+        input(type='checkbox' ng-class='{visible: $parent.filter.assignedUsers.include.has(user)}' ng-model='checked_include' ng-checked='$parent.filter.assignedUsers.include.has(user)' ng-click='$parent.filter.assignedUsers.include.toggle(user, checked_include)')
+        a(href='' ng-click='filter.clear(); $parent.filter.assignedUsers.include.set(user)') {{ user.name }}
       br
 
       label Project
       div.filter(ng-repeat='project in projects')
-        input(type='checkbox' ng-class='{visible: $parent.filter.projects.has(project)}' ng-model='checked' ng-checked='$parent.filter.projects.has(project)' ng-click='$parent.filter.projects.toggle(project, checked)')
-        a(href='' ng-click='filter.clear(); $parent.filter.projects.set(project)') {{ project.name }}
+        input(type='checkbox' ng-class='{visible: $parent.filter.projects.exclude.has(project)}' ng-model='checked_exclude' ng-checked='$parent.filter.projects.exclude.has(project)' ng-click='$parent.filter.projects.exclude.toggle(project, checked_exclude)')
+        input(type='checkbox' ng-class='{visible: $parent.filter.projects.include.has(project)}' ng-model='checked_include' ng-checked='$parent.filter.projects.include.has(project)' ng-click='$parent.filter.projects.include.toggle(project, checked_include)')
+        a(href='' ng-click='filter.clear(); $parent.filter.projects.include.set(project)') {{ project.name }}
       br
 
     .ten.columns
@@ -44,7 +48,7 @@
           th Milestone
           th State
           th Assignee
-        tr(ng-repeat='issue in issues | milestones: filter.milestones.items | states: filter.states.items | assignedUsers: filter.assignedUsers.items | projects: filter.projects.items')
+        tr(ng-repeat='issue in issues | includeMilestones: filter.milestones.include.items | excludeMilestones: filter.milestones.exclude.items | includeStates: filter.states.include.items | excludeStates: filter.states.exclude.items | includeAssignedUsers: filter.assignedUsers.include.items | excludeAssignedUsers: filter.assignedUsers.exclude.items | includeProjects: filter.projects.include.items | excludeProjects: filter.projects.exclude.items')
           td.project
             span {{ issue.project.name }}
           td.title

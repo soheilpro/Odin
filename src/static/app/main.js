@@ -57,7 +57,7 @@ odinApp.controller('MainController', ['$scope', '$http', '_', function($scope, $
   $scope.filter = new Filter();
 }])
 
-odinApp.filter('milestones', ['_', function(_) {
+odinApp.filter('includeMilestones', ['_', function(_) {
   return function(items, milestones) {
     if (milestones.length === 0)
       return items;
@@ -70,7 +70,20 @@ odinApp.filter('milestones', ['_', function(_) {
   };
 }])
 
-odinApp.filter('states', ['_', function(_) {
+odinApp.filter('excludeMilestones', ['_', function(_) {
+  return function(items, milestones) {
+    if (milestones.length === 0)
+      return items;
+
+    return _.filter(items, function(item) {
+      return !_.some(milestones, function(milestone) {
+        return item.milestone && item.milestone.id === milestone.id;
+      });
+    });
+  };
+}])
+
+odinApp.filter('includeStates', ['_', function(_) {
   return function(items, states) {
     if (states.length === 0)
       return items;
@@ -83,7 +96,20 @@ odinApp.filter('states', ['_', function(_) {
   };
 }])
 
-odinApp.filter('assignedUsers', ['_', function(_) {
+odinApp.filter('excludeStates', ['_', function(_) {
+  return function(items, states) {
+    if (states.length === 0)
+      return items;
+
+    return _.filter(items, function(item) {
+      return !_.some(states, function(state) {
+        return item.state.id === state.id;
+      });
+    });
+  };
+}])
+
+odinApp.filter('includeAssignedUsers', ['_', function(_) {
   return function(items, users) {
     if (users.length === 0)
       return items;
@@ -98,7 +124,22 @@ odinApp.filter('assignedUsers', ['_', function(_) {
   };
 }])
 
-odinApp.filter('projects', ['_', function(_) {
+odinApp.filter('excludeAssignedUsers', ['_', function(_) {
+  return function(items, users) {
+    if (users.length === 0)
+      return items;
+
+    return _.filter(items, function(item) {
+      return !_.some(item.assignedUsers, function(itemAssignedUser) {
+        return _.some(users, function(user) {
+          return itemAssignedUser.id === user.id;
+        });
+      });
+    });
+  };
+}])
+
+odinApp.filter('includeProjects', ['_', function(_) {
   return function(items, projects) {
     if (projects.length === 0)
       return items;
@@ -111,15 +152,28 @@ odinApp.filter('projects', ['_', function(_) {
   };
 }])
 
+odinApp.filter('excludeProjects', ['_', function(_) {
+  return function(items, projects) {
+    if (projects.length === 0)
+      return items;
+
+    return _.filter(items, function(item) {
+      return !_.some(projects, function(project) {
+        return item.project.id === project.id;
+      });
+    });
+  };
+}])
+
 function Filter() {
   var idComparer = function(item1, item2) {
     return item1.id === item2.id;
   };
 
-  this.milestones = new Set(idComparer);
-  this.states = new Set(idComparer);
-  this.assignedUsers = new Set(idComparer);
-  this.projects = new Set(idComparer);
+  this.milestones = new DualSet(idComparer);
+  this.states = new DualSet(idComparer);
+  this.assignedUsers = new DualSet(idComparer);
+  this.projects = new DualSet(idComparer);
 }
 
 Filter.prototype.clear = function() {
@@ -127,6 +181,27 @@ Filter.prototype.clear = function() {
   this.states.clear();
   this.assignedUsers.clear();
   this.projects.clear();
+};
+
+function DualSet(comparer) {
+  this.include = new Set(comparer);
+  this.exclude = new Set(comparer);
+  var _this = this;
+
+  this.include.add = function(item) {
+    Set.prototype.add.call(_this.include, item);
+    _this.exclude.remove(item);
+  }
+
+  this.exclude.add = function(item) {
+    Set.prototype.add.call(_this.exclude, item);
+    _this.include.remove(item);
+  }
+}
+
+DualSet.prototype.clear = function() {
+  this.include.clear();
+  this.exclude.clear();
 };
 
 function Set(comparer) {
