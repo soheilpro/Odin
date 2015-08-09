@@ -13,48 +13,6 @@ router.get('/users', function(request, response) {
   });
 });
 
-router.get('/users/:userId', function(request, response) {
-  var db = new DB();
-
-  response.json({
-    data: db.getUserById(request.params.userId)
-  });
-});
-
-router.get('/users/:userId/avatar', function(request, response) {
-  var avatarFile = path.resolve(path.join(__dirname, '/../db/user' + request.params.userId + '.png'))
-
-  fs.exists(avatarFile, function(exists) {
-    if (!exists) {
-      response.redirect('/app/images/avatar.png');
-      return;
-    }
-
-    response.sendFile(avatarFile);
-  });
-});
-
-router.get('/users/:userId/items', function(request, response) {
-  var db = new DB();
-  var items = db.getItemsByAssignedUserId(request.params.userId);;
-
-  _.each(items, function(item) {
-    expandItem(item, db);
-  });
-
-  response.json({
-    data: items
-  });
-});
-
-router.get('/states', function(request, response) {
-  var db = new DB();
-
-  response.json({
-    data: db.getStates()
-  });
-});
-
 router.get('/projects', function(request, response) {
   var db = new DB();
 
@@ -63,33 +21,11 @@ router.get('/projects', function(request, response) {
   });
 });
 
-router.get('/projects/:projectId', function(request, response) {
+router.get('/states', function(request, response) {
   var db = new DB();
 
   response.json({
-    data: db.getProjectById(request.params.projectId)
-  });
-});
-
-router.get('/projects/:projectId/items', function(request, response) {
-  var db = new DB();
-  var project = db.getProjectById(request.params.projectId);
-  var items = db.getItemsByProjectId(request.params.projectId);
-
-  _.each(items, function(item) {
-    expandItem(item, db);
-  });
-
-  items = _.sortBy(items, function(item) {
-    var index = _.findIndex(project.items, function(projectItem) {
-      return projectItem.id === item.id;
-    });
-
-    return index !== -1 ? index : Number.MAX_VALUE;
-  });
-
-  response.json({
-    data: items
+    data: db.getStates()
   });
 });
 
@@ -103,50 +39,6 @@ router.get('/items', function(request, response) {
 
   response.json({
     data: items
-  });
-});
-
-router.get('/tasks', function(request, response) {
-  var db = new DB();
-  var states = db.getStates()
-  var items = db.getItems();
-
-  _.each(items, function(item) {
-    expandItem(item, db);
-  });
-
-  var doableStateIds = _.pluck(_.filter(db.getStates(), function(state) {
-    return state.type === 'ready' ||
-           state.type === 'inprogress';
-  }), 'id');
-
-  var doneStateIds = _.pluck(_.filter(db.getStates(), function(state) {
-    return state.type === 'finished';
-  }), 'id');
-
-  items = _.filter(items, function(item) {
-    return _.contains(doableStateIds, item.state.id);
-  });
-
-  items = _.filter(items, function(item) {
-    return _.every(item.prerequisiteItems, function(prerequisiteItem) {
-      return _.contains(doneStateIds, prerequisiteItem.state.id);
-    });
-  });
-
-  response.json({
-    data: items
-  });
-});
-
-router.get('/items/:itemId', function(request, response) {
-  var db = new DB();
-  var item = db.getItemById(request.params.itemId);
-
-  expandItem(item, db);
-
-  response.json({
-    data: item
   });
 });
 
@@ -240,45 +132,6 @@ router.patch('/items/:itemId', function(request, response) {
       item.links = undefined;
 
   db.saveItem(item);
-
-  expandItem(item, db);
-
-  response.json({
-    data: item
-  });
-});
-
-router.put('/items/:itemId/state', function(request, response) {
-  var db = new DB();
-  var item = db.getItemById(request.params.itemId);
-  var oldState = db.getStateById(item.state.id);
-  var newState = db.getStateById(request.param('state_id'));
-
-  item.state = {
-    id: newState.id
-  };
-
-  db.saveItem(item);
-
-  if (oldState.type === 'pending' && newState.type === 'ready') {
-    function updatePrerequisiteItems(item) {
-      _.each(item.prerequisiteItems, function(prerequisiteItem) {
-        prerequisiteItem = db.getItemById(prerequisiteItem.id);
-
-        if (db.getStateById(prerequisiteItem.state.id).type === 'pending') {
-          prerequisiteItem.state = {
-            id: newState.id
-          };
-
-          db.saveItem(prerequisiteItem);
-        }
-
-        updatePrerequisiteItems(prerequisiteItem);
-      });
-    }
-
-    updatePrerequisiteItems(item);
-  }
 
   expandItem(item, db);
 

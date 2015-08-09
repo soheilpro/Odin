@@ -45,20 +45,6 @@ DB.prototype.getItems = function() {
   return this.data.items;
 };
 
-DB.prototype.getItemsByProjectId = function(projectId) {
-  return _.filter(this.data.items, function(item) {
-    return item.project.id === projectId;
-  });
-};
-
-DB.prototype.getItemsByAssignedUserId = function(userId) {
-  return _.filter(this.data.items, function(item) {
-    return _.any(item.assignedUsers, function(assignedUser) {
-      return assignedUser.id === userId;
-    });
-  });
-};
-
 DB.prototype.getItemById = function(itemId) {
   return _.find(this.data.items, function(item) {
     return item.id === itemId;
