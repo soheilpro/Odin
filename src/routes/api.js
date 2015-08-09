@@ -44,20 +44,28 @@ router.get('/items', function(request, response) {
 
 router.post('/items', function(request, response) {
   var item = {
-    title: request.param('title'),
-    description: request.param('description'),
-    state: {
-      id: request.param('state_id'),
-    },
-    project: {
-      id: request.param('project_id'),
-    },
   };
 
   if (request.param('type'))
     item.type = request.param('type');
   else
     item.type = 'issue';
+
+  if (request.param('title'))
+    item.title = request.param('title');
+
+  if (request.param('description'))
+    item.description = request.param('description');
+
+  if (request.param('state_id'))
+    item.state = {
+      id: request.param('state_id'),
+    };
+
+  if (request.param('project_id'))
+    item.project = {
+      id: request.param('project_id'),
+    };
 
   if (request.param('tags'))
     item.tags = request.param('tags').split(' ');
@@ -89,20 +97,32 @@ router.patch('/items/:itemId', function(request, response) {
   var item = db.getItemById(request.params.itemId);
 
   if (request.param('title') !== undefined)
-    item.title = request.param('title');
+    if (request.param('title'))
+      item.title = request.param('title');
+    else
+      item.title = undefined;
 
   if (request.param('description') !== undefined)
-    item.description = request.param('description');
+    if (request.param('description'))
+      item.description = request.param('description');
+    else
+      item.description = undefined;
 
   if (request.param('state_id') !== undefined)
-    item.state = {
-      id: request.param('state_id')
-    };
+    if (request.param('state_id'))
+      item.state = {
+        id: request.param('state_id')
+      };
+    else
+      item.state = undefined;
 
   if (request.param('project_id') !== undefined)
-    item.project = {
-      id: request.param('project_id')
-    };
+    if (request.param('project_id'))
+      item.project = {
+        id: request.param('project_id')
+      };
+    else
+      item.project = undefined;
 
   if (request.param('tags') !== undefined)
     item.tags = request.param('tags').split(' ');
@@ -172,20 +192,23 @@ router.delete('/items/:itemId/subitems/:subItemId', function(request, response) 
 module.exports = router;
 
 function expandItem(item, db) {
-  item.state = db.getStateById(item.state.id);
-  item.project = db.getProjectById(item.project.id);
-
   if (!item.type)
     item.type = 'issue';
+
+  if (!item.title)
+    item.title = '';
 
   if (!item.description)
     item.description = '';
 
+  if (item.state)
+    item.state = db.getStateById(item.state.id);
+
+  if (item.project)
+    item.project = db.getProjectById(item.project.id);
+
   if (!item.tags)
     item.tags = [];
-
-  if (!item.assignedUsers)
-    item.assignedUsers = [];
 
   if (!item.prerequisiteItems)
     item.prerequisiteItems = [];
@@ -193,9 +216,8 @@ function expandItem(item, db) {
   if (!item.subItems)
     item.subItems = [];
 
-  _.each(item.assignedUsers, function(assignedUser, index) {
-    item.assignedUsers[index] = db.getUserById(assignedUser.id);
-  });
+  if (!item.assignedUsers)
+    item.assignedUsers = [];
 
   _.each(item.prerequisiteItems, function(prerequisiteItem, index) {
     var prerequisiteItem = db.getItemById(prerequisiteItem.id);
@@ -207,5 +229,9 @@ function expandItem(item, db) {
     var subItem = db.getItemById(subItem.id);
     expandItem(subItem, db);
     item.subItems[index] = subItem
+  });
+
+  _.each(item.assignedUsers, function(assignedUser, index) {
+    item.assignedUsers[index] = db.getUserById(assignedUser.id);
   });
 }

@@ -217,7 +217,7 @@ odinApp.filter('includeStates', ['_', function(_) {
 
     return _.filter(items, function(item) {
       return _.some(states, function(state) {
-        return item.state.id === state.id;
+        return item.state && item.state.id === state.id;
       });
     });
   };
@@ -230,7 +230,7 @@ odinApp.filter('excludeStates', ['_', function(_) {
 
     return _.filter(items, function(item) {
       return !_.some(states, function(state) {
-        return item.state.id === state.id;
+        return item.state && item.state.id === state.id;
       });
     });
   };
@@ -273,7 +273,7 @@ odinApp.filter('includeProjects', ['_', function(_) {
 
     return _.filter(items, function(item) {
       return _.some(projects, function(project) {
-        return item.project.id === project.id;
+        return item.project && item.project.id === project.id;
       });
     });
   };
@@ -286,7 +286,7 @@ odinApp.filter('excludeProjects', ['_', function(_) {
 
     return _.filter(items, function(item) {
       return !_.some(projects, function(project) {
-        return item.project.id === project.id;
+        return item.project && item.project.id === project.id;
       });
     });
   };
