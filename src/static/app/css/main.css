@@ -1,5 +1,6 @@
 body {
   font-size: 1.3em;
+  padding: 20px 20px 20px 50px;
 }
 
 .sidebar label {
@@ -47,26 +48,31 @@ table.issues tr:hover td {
   background-color: #f6f6f6;
 }
 
-table.issues td.title span {
+table.issues td span {
   padding: 2px 4px;
+  line-height: 1.8em;
+}
+
+table.issues td input {
+  margin: 0 1px 0 0;
 }
 
 table.issues td.project span {
   text-transform: lowercase;
 }
 
-table.issues td.title span.state-pending {
+table.issues td.title.state-pending span {
 }
 
-table.issues td.title span.state-ready {
+table.issues td.title.state-ready span {
   background-color: #ffe0b2;
 }
 
-table.issues td.title span.state-inprogress {
+table.issues td.title.state-inprogress span {
   background-color: #b3e5fc;
 }
 
-table.issues td.title span.state-finished {
+table.issues td.title.state-finished span {
   background-color: #c5e1a5;
 }
 
@@ -76,4 +82,67 @@ table.issues td.state span {
 
 table.issues td.assigned-user span {
   text-transform: lowercase;
+}
+
+editable {
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+editable input {
+  display: none;
+  text-transform: lowercase;
+  padding-left: 2px;
+}
+
+td.title editable input {
+  text-transform: none;
+}
+
+editable input:focus {
+  outline: 0;
+}
+
+editable.editing span {
+  display: none;
+}
+
+editable.editing input {
+  display: table-cell;
+  width: 100%;
+}
+
+.ui-autocomplete {
+  position: absolute;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+}
+
+.ui-autocomplete .ui-menu-item {
+  margin: 0;
+  padding: 1px 2px;
+  cursor: default;
+  text-transform: lowercase;
+}
+
+.ui-autocomplete .ui-menu-item.ui-state-focus {
+  color: #ffffff;
+  background-color: #0fa0ce;
+}
+
+.ui-helper-hidden-accessible {
+  display:none;
 }

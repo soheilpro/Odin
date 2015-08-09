@@ -303,6 +303,19 @@ router.post('/items/:itemId/subitems', function(request, response) {
   response.sendStatus(200);
 });
 
+router.delete('/items/:itemId/subitems/:subItemId', function(request, response) {
+  var db = new DB();
+  var item = db.getItemById(request.params.itemId);
+
+  item.subItems = _.reject(item.subItems, function(subItem) {
+    return subItem.id === request.param('subItemId');
+  });
+
+  db.saveItem(item);
+
+  response.sendStatus(200);
+});
+
 module.exports = router;
 
 function expandItem(item, db) {

@@ -24,14 +24,17 @@ odinApp.factory('$', function() {
 odinApp.controller('MainController', ['$scope', '$http', '_', function($scope, $http, _) {
   $http.get('/api/users').then(function(response) {
     $scope.users = response.data.data;
+    $scope.usersNames = _.sortBy(_.pluck($scope.users, 'name'));
   });
 
   $http.get('/api/projects').then(function(response) {
     $scope.projects = response.data.data;
+    $scope.projectsNames = _.sortBy(_.pluck($scope.projects, 'name'));
   });
 
   $http.get('/api/states').then(function(response) {
     $scope.states = response.data.data;
+    $scope.statesTitles = _.sortBy(_.pluck($scope.states, 'title'));
   });
 
   $http.get('/api/items').then(function(response) {
@@ -43,6 +46,8 @@ odinApp.controller('MainController', ['$scope', '$http', '_', function($scope, $
       return item.type === 'milestone';
     });
 
+    $scope.milestonesTitles = _.sortBy(_.pluck($scope.milestones, 'title'));
+
     $scope.milestones.forEach(function(milestone) {
       milestone.subItems.forEach(function(item) {
         var issue = _.find($scope.issues, function(issue) {
@@ -53,6 +58,67 @@ odinApp.controller('MainController', ['$scope', '$http', '_', function($scope, $
       });
     });
   });
+
+  $scope.updateItem = function(item, values) {
+    var data = {};
+
+    if (values.title !== undefined) {
+      item.title = values.title;
+      data.title = values.title;
+    }
+
+    if (values.projectName !== undefined) {
+      var project = _.find($scope.projects, function(project) {
+        return project.name.toLowerCase() === values.projectName.toLowerCase();
+      });
+
+      item.project = project;
+      data.project_id = project ? project.id : '';
+    }
+
+    if (values.stateTitle !== undefined) {
+      var state = _.find($scope.states, function(state) {
+        return state.title.toLowerCase() === values.stateTitle.toLowerCase();
+      });
+
+      item.state = state;
+      data.state_id = state ? state.id : '';
+    }
+
+    if (values.assignedUserName !== undefined) {
+      var user = _.find($scope.users, function(user) {
+        return user.name.toLowerCase() === values.assignedUserName.toLowerCase();
+      });
+
+      item.assignedUsers = [user];
+      data.assigned_user_ids = user ? user.id : '';
+    }
+
+    if (!_.isEmpty(data))
+      $http.patch('/api/items/' + item.id, data);
+
+    if (values.milestoneTitle !== undefined) {
+      if (item.milestone) {
+        $http.delete('/api/items/' + item.milestone.id + '/subitems/' + item.id);
+
+        item.milestone = null;
+      }
+
+      if (values.milestoneTitle) {
+        var milestone = _.find($scope.milestones, function(milestone) {
+          return milestone.title.toLowerCase() === values.milestoneTitle.toLowerCase();
+        });
+
+        item.milestone = milestone;
+
+        var data = {
+          item_id: item.id
+        };
+
+        $http.post('/api/items/' + milestone.id + '/subitems/', data);
+      }
+    }
+  };
 
   $scope.filter = new Filter();
 }])
@@ -164,6 +230,75 @@ odinApp.filter('excludeProjects', ['_', function(_) {
     });
   };
 }])
+
+odinApp.directive('editable', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      ngModel: '=',
+      ngDataSource: '=',
+      ngChanged: '&'
+    },
+    require: "?ngModel",
+    template: '<div ng-dblclick="startEditing()"><span ng-bind="ngModel"></span><input ng-model="ngModel" ng-blur="endEditing()"></input></div>',
+    link: function($scope, element, attrs, ngModel) {
+      $scope.startEditing = function() {
+        var divElement = angular.element(element.children()[0]);
+        var inputElement = angular.element(divElement.children()[1]);
+
+        inputElement.bind('keydown keypress', function(event) {
+          if (event.which === 27) {
+            ngModel.$setViewValue($scope.originalValue);
+            $scope.endEditing();
+            return;
+          }
+
+          if (event.which === 13) {
+            if ($scope.focused)
+              return;
+
+            $scope.endEditing();
+            return;
+          }
+        });
+
+        $scope.originalValue = ngModel.$viewValue;
+        $scope.focused = false;
+
+        element.addClass('editing');
+        inputElement.select();
+        inputElement.focus();
+
+        if ($scope.ngDataSource) {
+          inputElement.autocomplete({
+            source: $scope.ngDataSource,
+            delay: 0,
+            minLength: 0,
+            focus: function(event, ui) {
+              $scope.focused = true;
+            },
+            select: function(event, ui) {
+              ngModel.$setViewValue(ui.item.value);
+              $scope.endEditing();
+            }
+          }).autocomplete('search', '');
+        }
+      };
+
+      $scope.endEditing = function() {
+        element.removeClass('editing');
+
+        if ($scope.originalValue === ngModel.$viewValue)
+          return;
+
+        $scope.ngChanged();
+
+        // To prevent further events from being fired
+        $scope.originalValue = ngModel.$viewValue;
+      };
+    }
+  };
+});
 
 function Filter() {
   var idComparer = function(item1, item2) {
