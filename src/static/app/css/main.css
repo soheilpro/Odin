@@ -3,6 +3,10 @@ body {
   padding: 20px 20px 20px 50px;
 }
 
+.actionbar {
+  margin-bottom: 8px;
+}
+
 .sidebar label {
   display: block;
   padding-bottom: 4px;

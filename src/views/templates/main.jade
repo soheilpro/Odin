@@ -39,6 +39,9 @@
     br
 
   .ten.columns
+    div.actionbar
+      button.button-primary(ng-click='newIssue();' title='Shortcut: N') New Issue
+
     table.issues
       tr
         th Milestone
@@ -46,7 +49,7 @@
         th Title
         th State
         th Assignee
-      tr(ng-repeat='issue in issues | includeMilestones: filter.milestones.include.items | excludeMilestones: filter.milestones.exclude.items | includeStates: filter.states.include.items | excludeStates: filter.states.exclude.items | includeAssignedUsers: filter.assignedUsers.include.items | excludeAssignedUsers: filter.assignedUsers.exclude.items | includeProjects: filter.projects.include.items | excludeProjects: filter.projects.exclude.items')
+      tr(ng-repeat='issue in issues | includeMilestones: filter.milestones.include.items | excludeMilestones: filter.milestones.exclude.items | includeStates: filter.states.include.items | excludeStates: filter.states.exclude.items | includeAssignedUsers: filter.assignedUsers.include.items | excludeAssignedUsers: filter.assignedUsers.exclude.items | includeProjects: filter.projects.include.items | excludeProjects: filter.projects.exclude.items | reverse' id='issue-{{ issue.id }}')
         td.milestone(nowrap)
           editable(ng-init='milestoneTitle = issue.milestone.title' ng-model='milestoneTitle' ng-data-source='milestonesTitles' ng-changed='updateItem(issue, { milestoneTitle: milestoneTitle })')
         td.project(nowrap)
