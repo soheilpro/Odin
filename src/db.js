@@ -7,51 +7,59 @@ function DB() {
   this.data = JSON.parse(fs.readFileSync(this.filename));
 }
 
-DB.prototype.persist = function() {
-  fs.writeFileSync(this.filename, JSON.stringify(this.data, null, 2));
+DB.prototype.persist = function(callback) {
+  fs.writeFile(this.filename, JSON.stringify(this.data, null, 2), callback);
 };
 
-DB.prototype.getUsers = function() {
-  return this.data.users;
+DB.prototype.getUsers = function(callback) {
+  callback(null, this.data.users);
 };
 
-DB.prototype.getUserById = function(userId) {
-  return _.find(this.data.users, function(user) {
+DB.prototype.getUserById = function(userId, callback) {
+  var user = _.find(this.data.users, function(user) {
     return user.id === userId;
-  })
+  });
+
+  callback(null, user);
 };
 
-DB.prototype.getStates = function() {
-  return this.data.states;
+DB.prototype.getStates = function(callback) {
+  callback(null, this.data.states);
 };
 
-DB.prototype.getStateById = function(stateId) {
-  return _.find(this.data.states, function(state) {
+DB.prototype.getStateById = function(stateId, callback) {
+  var state = _.find(this.data.states, function(state) {
     return state.id === stateId;
-  })
+  });
+
+  callback(null, state);
 };
 
-DB.prototype.getProjects = function() {
-  return this.data.projects;
+DB.prototype.getProjects = function(callback) {
+  callback(null, this.data.projects);
 };
 
-DB.prototype.getProjectById = function(projectId) {
-  return _.find(this.data.projects, function(project) {
+DB.prototype.getProjectById = function(projectId, callback) {
+  var project = _.find(this.data.projects, function(project) {
     return project.id === projectId;
-  })
+  });
+
+  callback(null, project);
 };
 
-DB.prototype.getItems = function() {
-  return this.data.items;
+DB.prototype.getItems = function(callback) {
+  callback(null, this.data.items);
 };
 
-DB.prototype.getItemById = function(itemId) {
-  return _.find(this.data.items, function(item) {
+DB.prototype.getItemById = function(itemId, callback) {
+  var item = _.find(this.data.items, function(item) {
     return item.id === itemId;
-  })
+  });
+
+  callback(null, item);
 };
 
-DB.prototype.saveItem = function(item) {
+DB.prototype.saveItem = function(item, callback) {
   if (!item.id) {
     item.id = uuid.v4();
     this.data.items.push(item);
@@ -64,7 +72,7 @@ DB.prototype.saveItem = function(item) {
     this.data.items[index] = item;
   }
 
-  this.persist();
+  this.persist(callback);
 };
 
 module.exports = DB;
