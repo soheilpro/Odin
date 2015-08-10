@@ -92,7 +92,7 @@ router.post('/items', function(request, response) {
 
   var db = new DB();
 
-  db.saveItem(item, function(error) {
+  db.saveItem(item, function(error, item) {
     expandItem(item, db, function(error) {
       response.json({
         data: item
@@ -160,7 +160,7 @@ router.patch('/items/:itemId', function(request, response) {
       else
         item.links = undefined;
 
-    db.saveItem(item, function(error) {
+    db.saveItem(item, function(error, item) {
       expandItem(item, db, function(error) {
         response.json({
           data: item
@@ -181,7 +181,7 @@ router.post('/items/:itemId/subitems', function(request, response) {
       id: request.param('item_id')
     });
 
-    db.saveItem(item, function(error) {
+    db.saveItem(item, function(error, item) {
       response.sendStatus(200);
     });
   });
@@ -195,7 +195,7 @@ router.delete('/items/:itemId/subitems/:subItemId', function(request, response) 
       return subItem.id === request.param('subItemId');
     });
 
-    db.saveItem(item, function(error) {
+    db.saveItem(item, function(error, item) {
       response.sendStatus(200);
     });
   });
