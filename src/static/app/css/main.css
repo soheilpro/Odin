@@ -65,21 +65,6 @@ table.issues td.project span {
   text-transform: lowercase;
 }
 
-table.issues td.title.state-pending span {
-}
-
-table.issues td.title.state-ready span {
-  background-color: #ffe0b2;
-}
-
-table.issues td.title.state-inprogress span {
-  background-color: #b3e5fc;
-}
-
-table.issues td.title.state-finished span {
-  background-color: #c5e1a5;
-}
-
 table.issues td.state span {
   text-transform: lowercase;
 }

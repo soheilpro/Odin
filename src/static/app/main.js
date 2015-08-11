@@ -298,10 +298,12 @@ odinApp.directive('editable', function() {
     scope: {
       ngModel: '=',
       ngDataSource: '=',
+      ngSpanStyle: '@',
+      ngInputStyle: '@',
       ngChanged: '&'
     },
     require: "?ngModel",
-    template: '<div ng-dblclick="startEditing()"><span ng-bind="ngModel"></span><input ng-model="ngModel" ng-blur="endEditing()"></input></div>',
+    template: '<div ng-dblclick="startEditing()"><span ng-bind="ngModel" style="{{ngSpanStyle}}"></span><input ng-model="ngModel" ng-blur="endEditing()" style="{{ngInputStyle}}"></input></div>',
     link: function($scope, element, attrs, ngModel) {
       $scope.startEditing = function() {
         var divElement = angular.element(element.children()[0]);
