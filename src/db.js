@@ -1,4 +1,5 @@
 var mongodb = require('mongodb');
+var config = require('./config');
 var _ = require('underscore');
 
 var _db;
@@ -122,7 +123,7 @@ DB.prototype.opendb = function(callback) {
     return;
   }
 
-  mongodb.MongoClient.connect("mongodb://localhost:27017/odin", function(error, db) {
+  mongodb.MongoClient.connect(config.get('db'), function(error, db) {
     if (error) {
       callback(error);
       return;
