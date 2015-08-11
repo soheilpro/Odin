@@ -134,7 +134,7 @@ router.post('/items', function(request, response, next) {
 router.patch('/items/:itemId', function(request, response, next) {
   var db = new DB();
 
-  db.getItemById(request.params.itemId, function(error, item) {
+  db.getItemById(request.param('itemId'), function(error, item) {
     if (error) {
       next(error);
       return;
@@ -218,7 +218,7 @@ router.patch('/items/:itemId', function(request, response, next) {
 router.post('/items/:itemId/subitems', function(request, response, next) {
   var db = new DB();
 
-  db.getItemById(request.params.itemId, function(error, item) {
+  db.getItemById(request.param('itemId'), function(error, item) {
     if (error) {
       next(error);
       return;
@@ -245,7 +245,7 @@ router.post('/items/:itemId/subitems', function(request, response, next) {
 router.delete('/items/:itemId/subitems/:subItemId', function(request, response, next) {
   var db = new DB();
 
-  db.getItemById(request.params.itemId, function(error, item) {
+  db.getItemById(request.param('itemId'), function(error, item) {
     if (error) {
       next(error);
       return;
