@@ -30,18 +30,18 @@ odinApp.controller('MainController', ['$scope', '$http', '$timeout', 'hotkeys', 
     })
 
   $http.get('/api/users').then(function(response) {
-    $scope.users = response.data.data;
-    $scope.usersNames = _.sortBy(_.pluck($scope.users, 'name'));
+    $scope.users = _.sortBy(response.data.data, 'name');
+    $scope.usersNames = _.pluck($scope.users, 'name');
   });
 
   $http.get('/api/projects').then(function(response) {
-    $scope.projects = response.data.data;
-    $scope.projectsNames = _.sortBy(_.pluck($scope.projects, 'name'));
+    $scope.projects = _.sortBy(response.data.data, 'name');
+    $scope.projectsNames = _.pluck($scope.projects, 'name');
   });
 
   $http.get('/api/states').then(function(response) {
-    $scope.states = response.data.data;
-    $scope.statesTitles = _.sortBy(_.pluck($scope.states, 'title'));
+    $scope.states = _.sortBy(response.data.data, 'title');
+    $scope.statesTitles = _.pluck($scope.states, 'title');
   });
 
   $http.get('/api/items').then(function(response) {
@@ -51,11 +51,11 @@ odinApp.controller('MainController', ['$scope', '$http', '$timeout', 'hotkeys', 
       return item.type === 'issue';
     });
 
-    $scope.milestones = _.filter(items, function(item) {
+    $scope.milestones = _.sortBy(_.filter(items, function(item) {
       return item.type === 'milestone';
-    });
+    }), 'title');
 
-    $scope.milestonesTitles = _.sortBy(_.pluck($scope.milestones, 'title'));
+    $scope.milestonesTitles = _.pluck($scope.milestones, 'title');
 
     $scope.milestones.forEach(function(milestone) {
       milestone.subItems.forEach(function(item) {
