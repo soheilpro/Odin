@@ -321,9 +321,6 @@ router.post('/items', function(request, response, next) {
   if (request.param('assigned_user_ids'))
     item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
 
-  if (request.param('links'))
-    item.links = _.map(request.param('links').split(','), function(url) { return { url: url }; });
-
   var db = new DB();
 
   db.insertItem(item, function(error, item) {
@@ -405,12 +402,6 @@ router.patch('/items/:itemId', function(request, response, next) {
 
   if (request.param('remove_assigned_user_ids'))
     change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), function(id) { return { id: id }; });
-
-  if (request.param('links') !== undefined)
-    if (request.param('links'))
-      change.links = _.map(request.param('links').split(','), function(url) { return { url: url }; });
-    else
-      change.links = null;
 
   db.updateItem(request.param('itemId'), change, function(error, item) {
     if (error) {

@@ -222,9 +222,6 @@ DB.prototype.updateItem = function(itemId, change, callback) {
   update.setOrUnset('assignedUsers', change.assignedUsers, toRefArray);
   update.addToSet('assignedUsers', change.assignedUsers_add, toRefArray);
   update.removeFromSet('assignedUsers', change.assignedUsers_remove, toRefArray);
-  update.setOrUnset('links', change.links, toRefArray);
-  update.addToSet('links', change.links_add, toRefArray);
-  update.removeFromSet('links', change.links_remove, toRefArray);
 
   this.findAndModify('items', {_id: mongodb.ObjectId(itemId)}, update.value(), {new: true}, function(error, result) {
     if (error) {
