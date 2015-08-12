@@ -26,15 +26,14 @@ router.get('/users', function(request, response, next) {
 });
 
 router.post('/users', function(request, response, next) {
-  var user = {
-  };
+  var user = {};
 
   if (request.param('name'))
     user.name = request.param('name');
 
   var db = new DB();
 
-  db.saveUser(user, function(error, user) {
+  db.insertUser(user, function(error, user) {
     if (error) {
       next(error);
       return;
@@ -55,34 +54,25 @@ router.post('/users', function(request, response, next) {
 
 router.patch('/users/:userId', function(request, response, next) {
   var db = new DB();
+  var change = {};
 
-  db.getUserById(request.param('userId'), function(error, user) {
+  if (request.param('name') !== undefined)
+    change.name = request.param('name');
+
+  db.updateUser(request.param('userId'), change, function(error, user) {
     if (error) {
       next(error);
       return;
     }
 
-    if (request.param('name') !== undefined)
-      if (request.param('name'))
-        user.name = request.param('name');
-      else
-        user.name = undefined;
-
-    db.saveUser(user, function(error, user) {
+    expandUser(user, db, function(error) {
       if (error) {
         next(error);
         return;
       }
 
-      expandUser(user, db, function(error) {
-        if (error) {
-          next(error);
-          return;
-        }
-
-        response.json({
-          data: user
-        });
+      response.json({
+        data: user
       });
     });
   });
@@ -115,8 +105,7 @@ router.get('/projects', function(request, response, next) {
 });
 
 router.post('/projects', function(request, response, next) {
-  var project = {
-  };
+  var project = {};
 
   if (request.param('name'))
     project.name = request.param('name');
@@ -126,7 +115,7 @@ router.post('/projects', function(request, response, next) {
 
   var db = new DB();
 
-  db.saveProject(project, function(error, project) {
+  db.insertProject(project, function(error, project) {
     if (error) {
       next(error);
       return;
@@ -147,40 +136,28 @@ router.post('/projects', function(request, response, next) {
 
 router.patch('/projects/:projectId', function(request, response, next) {
   var db = new DB();
+  var change = {};
 
-  db.getProjectById(request.param('projectId'), function(error, project) {
+  if (request.param('name') !== undefined)
+    change.name = request.param('name');
+
+  if (request.param('group') !== undefined)
+    change.group = request.param('group');
+
+  db.updateProject(request.param('projectId'), change, function(error, project) {
     if (error) {
       next(error);
       return;
     }
 
-    if (request.param('name') !== undefined)
-      if (request.param('name'))
-        project.name = request.param('name');
-      else
-        project.name = undefined;
-
-    if (request.param('group') !== undefined)
-      if (request.param('group'))
-        project.group = request.param('group');
-      else
-        project.group = undefined;
-
-    db.saveProject(project, function(error, project) {
+    expandProject(project, db, function(error) {
       if (error) {
         next(error);
         return;
       }
 
-      expandProject(project, db, function(error) {
-        if (error) {
-          next(error);
-          return;
-        }
-
-        response.json({
-          data: project
-        });
+      response.json({
+        data: project
       });
     });
   });
@@ -216,8 +193,7 @@ router.get('/states', function(request, response, next) {
 });
 
 router.post('/states', function(request, response, next) {
-  var state = {
-  };
+  var state = {};
 
   if (request.param('title'))
     state.title = request.param('title');
@@ -230,7 +206,7 @@ router.post('/states', function(request, response, next) {
 
   var db = new DB();
 
-  db.saveState(state, function(error, state) {
+  db.insertState(state, function(error, state) {
     if (error) {
       next(error);
       return;
@@ -251,46 +227,31 @@ router.post('/states', function(request, response, next) {
 
 router.patch('/states/:stateId', function(request, response, next) {
   var db = new DB();
+  var change = {};
 
-  db.getStateById(request.param('stateId'), function(error, state) {
+  if (request.param('title') !== undefined)
+    change.title = request.param('title');
+
+  if (request.param('type') !== undefined)
+    change.type = request.param('type');
+
+  if (request.param('color') !== undefined)
+    change.color = request.param('color');
+
+  db.updateState(request.param('stateId'), change, function(error, state) {
     if (error) {
       next(error);
       return;
     }
 
-    if (request.param('title') !== undefined)
-      if (request.param('title'))
-        state.title = request.param('title');
-      else
-        state.title = undefined;
-
-    if (request.param('type') !== undefined)
-      if (request.param('type'))
-        state.type = request.param('type');
-      else
-        state.type = undefined;
-
-    if (request.param('color') !== undefined)
-      if (request.param('color'))
-        state.color = request.param('color');
-      else
-        state.color = undefined;
-
-    db.saveState(state, function(error, state) {
+    expandState(state, db, function(error) {
       if (error) {
         next(error);
         return;
       }
 
-      expandState(state, db, function(error) {
-        if (error) {
-          next(error);
-          return;
-        }
-
-        response.json({
-          data: state
-        });
+      response.json({
+        data: state
       });
     });
   });
@@ -329,8 +290,7 @@ router.get('/items', function(request, response, next) {
 });
 
 router.post('/items', function(request, response, next) {
-  var item = {
-  };
+  var item = {};
 
   if (request.param('type'))
     item.type = request.param('type');
@@ -344,14 +304,10 @@ router.post('/items', function(request, response, next) {
     item.description = request.param('description');
 
   if (request.param('state_id'))
-    item.state = {
-      id: request.param('state_id'),
-    };
+    item.state = { id: request.param('state_id') };
 
   if (request.param('project_id'))
-    item.project = {
-      id: request.param('project_id'),
-    };
+    item.project = { id: request.param('project_id') };
 
   if (request.param('tags'))
     item.tags = request.param('tags').split(' ');
@@ -370,7 +326,7 @@ router.post('/items', function(request, response, next) {
 
   var db = new DB();
 
-  db.saveItem(item, function(error, item) {
+  db.insertItem(item, function(error, item) {
     if (error) {
       next(error);
       return;
@@ -391,83 +347,67 @@ router.post('/items', function(request, response, next) {
 
 router.patch('/items/:itemId', function(request, response, next) {
   var db = new DB();
+  var change = {};
 
-  db.getItemById(request.param('itemId'), function(error, item) {
+  if (request.param('title') !== undefined)
+    change.title = request.param('title');
+
+  if (request.param('description') !== undefined)
+    change.description = request.param('description');
+
+  if (request.param('state_id') !== undefined)
+    if (request.param('state_id'))
+      change.state = { id: request.param('state_id') };
+    else
+      change.state = null;
+
+  if (request.param('project_id') !== undefined)
+    if (request.param('project_id'))
+      change.project = { id: request.param('project_id') };
+    else
+      change.project = null;
+
+  if (request.param('tags') !== undefined)
+    change.tags = request.param('tags').split(' ');
+
+  if (request.param('prerequisite_item_ids') !== undefined)
+    if (request.param('prerequisite_item_ids'))
+      change.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+    else
+      change.prerequisiteItems = null;
+
+  if (request.param('sub_item_ids') !== undefined)
+    if (request.param('sub_item_ids'))
+      change.subItems = _.map(request.param('sub_item_ids').split(','), function(id) { return { id: id }; });
+    else
+      change.subItems = null;
+
+  if (request.param('assigned_user_ids') !== undefined)
+    if (request.param('assigned_user_ids'))
+      change.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
+    else
+      change.assignedUsers = null;
+
+  if (request.param('links') !== undefined)
+    if (request.param('links'))
+      change.links = _.map(request.param('links').split(','), function(url) { return { url: url }; });
+    else
+      change.links = null;
+
+  db.updateItem(request.param('itemId'), change, function(error, item) {
     if (error) {
       next(error);
       return;
     }
 
-    if (request.param('title') !== undefined)
-      if (request.param('title'))
-        item.title = request.param('title');
-      else
-        item.title = undefined;
-
-    if (request.param('description') !== undefined)
-      if (request.param('description'))
-        item.description = request.param('description');
-      else
-        item.description = undefined;
-
-    if (request.param('state_id') !== undefined)
-      if (request.param('state_id'))
-        item.state = {
-          id: request.param('state_id')
-        };
-      else
-        item.state = undefined;
-
-    if (request.param('project_id') !== undefined)
-      if (request.param('project_id'))
-        item.project = {
-          id: request.param('project_id')
-        };
-      else
-        item.project = undefined;
-
-    if (request.param('tags') !== undefined)
-      item.tags = request.param('tags').split(' ');
-
-    if (request.param('prerequisite_item_ids') !== undefined)
-      if (request.param('prerequisite_item_ids') !== '')
-        item.prerequisiteItems = _.map(request.param('prerequisite_item_ids').split(','), function(id) { return { id: id }; });
-      else
-        item.prerequisiteItems = undefined;
-
-    if (request.param('sub_item_ids') !== undefined)
-      if (request.param('sub_item_ids') !== '')
-        item.subItems = _.map(request.param('sub_item_ids').split(','), function(id) { return { id: id }; });
-      else
-        item.subItems = undefined;
-
-    if (request.param('assigned_user_ids') !== undefined)
-      if (request.param('assigned_user_ids') !== '')
-        item.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
-      else
-        item.assignedUsers = undefined;
-
-    if (request.param('links') !== undefined)
-      if (request.param('links') !== '')
-        item.links = _.map(request.param('links').split(','), function(url) { return { url: url }; });
-      else
-        item.links = undefined;
-
-    db.saveItem(item, function(error, item) {
+    expandItem(item, db, function(error) {
       if (error) {
         next(error);
         return;
       }
 
-      expandItem(item, db, function(error) {
-        if (error) {
-          next(error);
-          return;
-        }
-
-        response.json({
-          data: item
-        });
+      response.json({
+        data: item
       });
     });
   });
@@ -475,52 +415,37 @@ router.patch('/items/:itemId', function(request, response, next) {
 
 router.post('/items/:itemId/subitems', function(request, response, next) {
   var db = new DB();
+  var change = {
+    subItems_add: [
+      { id: request.param('item_id') }
+    ]
+  };
 
-  db.getItemById(request.param('itemId'), function(error, item) {
+  db.updateItem(request.param('itemId'), change, function(error, item) {
     if (error) {
       next(error);
       return;
     }
 
-    if (!item.subItems)
-      item.subItems = [];
-
-    item.subItems.push({
-      id: request.param('item_id')
-    });
-
-    db.saveItem(item, function(error, item) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.sendStatus(200);
-    });
+    response.sendStatus(200);
   });
 });
 
 router.delete('/items/:itemId/subitems/:subItemId', function(request, response, next) {
   var db = new DB();
+  var change = {
+    subItems_remove: [
+      { id: request.param('subItemId') }
+    ]
+  };
 
-  db.getItemById(request.param('itemId'), function(error, item) {
+  db.updateItem(request.param('itemId'), change, function(error, item) {
     if (error) {
       next(error);
       return;
     }
 
-    item.subItems = _.reject(item.subItems, function(subItem) {
-      return subItem.id === request.param('subItemId');
-    });
-
-    db.saveItem(item, function(error, item) {
-      if (error) {
-        next(error);
-        return;
-      }
-
-      response.sendStatus(200);
-    });
+    response.sendStatus(200);
   });
 });
 

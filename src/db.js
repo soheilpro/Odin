@@ -31,10 +31,25 @@ DB.prototype.getUserById = function(userId, callback) {
   });
 };
 
-DB.prototype.saveUser = function(user, callback) {
+DB.prototype.insertUser = function(user, callback) {
   var document = userToDocument(user);
 
-  this.findAndModify('users', {_id: document._id}, document, {upsert: true, new: true}, function(error, result) {
+  this.insert('users', document, function(error) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var user = documentToUser(document);
+    callback(null, user);
+  });
+};
+
+DB.prototype.updateUser = function(userId, change, callback) {
+  var update = new Update();
+  update.setOrUnset('name', change.name);
+
+  this.findAndModify('users', {_id: mongodb.ObjectId(userId)}, update.value(), {new: true}, function(error, result) {
     if (error) {
       callback(error);
       return;
@@ -69,10 +84,27 @@ DB.prototype.getStateById = function(stateId, callback) {
   });
 };
 
-DB.prototype.saveState = function(state, callback) {
+DB.prototype.insertState = function(state, callback) {
   var document = stateToDocument(state);
 
-  this.findAndModify('states', {_id: document._id}, document, {upsert: true, new: true}, function(error, result) {
+  this.insert('states', document,function(error) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var state = documentToState(document);
+    callback(null, state);
+  });
+};
+
+DB.prototype.updateState = function(stateId, change, callback) {
+  var update = new Update();
+  update.setOrUnset('title', change.title);
+  update.setOrUnset('type', change.type);
+  update.setOrUnset('color', change.color);
+
+  this.findAndModify('states', {_id: mongodb.ObjectId(stateId)}, update.value(), {new: true}, function(error, result) {
     if (error) {
       callback(error);
       return;
@@ -107,10 +139,26 @@ DB.prototype.getProjectById = function(projectId, callback) {
   });
 };
 
-DB.prototype.saveProject = function(project, callback) {
+DB.prototype.insertProject = function(project, callback) {
   var document = projectToDocument(project);
 
-  this.findAndModify('projects', {_id: document._id}, document, {upsert: true, new: true}, function(error, result) {
+  this.insert('projects', document, function(error) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var project = documentToProject(document);
+    callback(null, project);
+  });
+};
+
+DB.prototype.updateProject = function(projectId, change, callback) {
+  var update = new Update();
+  update.setOrUnset('name', change.name);
+  update.setOrUnset('group', change.group);
+
+  this.findAndModify('projects', {_id: mongodb.ObjectId(projectId)}, update.value(), {new: true}, function(error, result) {
     if (error) {
       callback(error);
       return;
@@ -145,10 +193,40 @@ DB.prototype.getItemById = function(itemId, callback) {
   });
 };
 
-DB.prototype.saveItem = function(item, callback) {
+DB.prototype.insertItem = function(item, callback) {
   var document = itemToDocument(item);
 
-  this.findAndModify('items', {_id: document._id}, document, {upsert: true, new: true}, function(error, result) {
+  this.insert('items', document, function(error) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var item = documentToItem(document);
+    callback(null, item);
+  });
+};
+
+DB.prototype.updateItem = function(itemId, change, callback) {
+  var update = new Update();
+  update.setOrUnset('title', change.title);
+  update.setOrUnset('description', change.description);
+  update.setOrUnset('state', change.state, toRef);
+  update.setOrUnset('project', change.project, toRef);
+  update.setOrUnset('prerequisiteItems', change.prerequisiteItems, toRefArray);
+  update.addToSet('prerequisiteItems', change.prerequisiteItems_add, toRefArray);
+  update.removeFromSet('prerequisiteItems', change.prerequisiteItems_remove, toRefArray);
+  update.setOrUnset('subItems', change.subItems, toRefArray);
+  update.addToSet('subItems', change.subItems_add, toRefArray);
+  update.removeFromSet('subItems', change.subItems_remove, toRefArray);
+  update.setOrUnset('assignedUsers', change.assignedUsers, toRefArray);
+  update.addToSet('assignedUsers', change.assignedUsers_add, toRefArray);
+  update.removeFromSet('assignedUsers', change.assignedUsers_remove, toRefArray);
+  update.setOrUnset('links', change.links, toRefArray);
+  update.addToSet('links', change.links_add, toRefArray);
+  update.removeFromSet('links', change.links_remove, toRefArray);
+
+  this.findAndModify('items', {_id: mongodb.ObjectId(itemId)}, update.value(), {new: true}, function(error, result) {
     if (error) {
       callback(error);
       return;
@@ -431,3 +509,45 @@ function fromRefArray(document) {
 
   return result;
 }
+
+function Update() {
+  this.$set = {};
+  this.$unset = { __noop__: '' };
+  this.$addToSet = {};
+  this.$pull = {};
+}
+
+Update.prototype.setOrUnset = function(key, value, map) {
+  if (value === undefined)
+    return;
+
+  if (value)
+    this.$set[key] = map ? map(value) : value;
+  else
+    this.$unset[key] = '';
+};
+
+Update.prototype.addToSet = function(key, value, map) {
+  if (value === undefined)
+    return;
+
+  this.$addToSet[key] = { $each: map ? map(value) : value };
+};
+
+Update.prototype.removeFromSet = function(key, value, map) {
+  if (value === undefined)
+    return;
+
+  this.$pull[key] = { $in: map ? map(value) : value };
+};
+
+Update.prototype.value = function() {
+  var result = _.clone(this);
+
+  _.each(result, function(value, key) {
+    if (_.isEmpty(result[key]))
+      delete result[key];
+  });
+
+  return result;
+};
