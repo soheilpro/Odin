@@ -151,7 +151,11 @@ odinApp.controller('MainController', ['$scope', '$http', '$timeout', 'hotkeys', 
 
     if (values.milestoneTitle !== undefined) {
       if (item.milestone) {
-        $http.delete('/api/items/' + item.milestone.id + '/subitems/' + item.id);
+        var data = {
+          remove_sub_item_ids: item.id
+        };
+
+        $http.patch('/api/items/' + item.milestone.id, data);
 
         item.milestone = null;
       }
@@ -164,10 +168,10 @@ odinApp.controller('MainController', ['$scope', '$http', '$timeout', 'hotkeys', 
         item.milestone = milestone;
 
         var data = {
-          item_id: item.id
+          add_sub_item_ids: item.id
         };
 
-        $http.post('/api/items/' + milestone.id + '/subitems/', data);
+        $http.patch('/api/items/' + milestone.id, data);
       }
     }
   };

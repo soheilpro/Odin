@@ -376,17 +376,35 @@ router.patch('/items/:itemId', function(request, response, next) {
     else
       change.prerequisiteItems = null;
 
+  if (request.param('add_prerequisite_item_ids'))
+    change.prerequisiteItems_add = _.map(request.param('add_prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+
+  if (request.param('remove_prerequisite_item_ids'))
+    change.prerequisiteItems_remove = _.map(request.param('remove_prerequisite_item_ids').split(','), function(id) { return { id: id }; });
+
   if (request.param('sub_item_ids') !== undefined)
     if (request.param('sub_item_ids'))
       change.subItems = _.map(request.param('sub_item_ids').split(','), function(id) { return { id: id }; });
     else
       change.subItems = null;
 
+  if (request.param('add_sub_item_ids'))
+    change.subItems_add = _.map(request.param('add_sub_item_ids').split(','), function(id) { return { id: id }; });
+
+  if (request.param('remove_sub_item_ids'))
+    change.subItems_remove = _.map(request.param('remove_sub_item_ids').split(','), function(id) { return { id: id }; });
+
   if (request.param('assigned_user_ids') !== undefined)
     if (request.param('assigned_user_ids'))
       change.assignedUsers = _.map(request.param('assigned_user_ids').split(','), function(id) { return { id: id }; });
     else
       change.assignedUsers = null;
+
+  if (request.param('add_assigned_user_ids'))
+    change.assignedUsers_add = _.map(request.param('add_assigned_user_ids').split(','), function(id) { return { id: id }; });
+
+  if (request.param('remove_assigned_user_ids'))
+    change.assignedUsers_remove = _.map(request.param('remove_assigned_user_ids').split(','), function(id) { return { id: id }; });
 
   if (request.param('links') !== undefined)
     if (request.param('links'))
@@ -410,42 +428,6 @@ router.patch('/items/:itemId', function(request, response, next) {
         data: item
       });
     });
-  });
-});
-
-router.post('/items/:itemId/subitems', function(request, response, next) {
-  var db = new DB();
-  var change = {
-    subItems_add: [
-      { id: request.param('item_id') }
-    ]
-  };
-
-  db.updateItem(request.param('itemId'), change, function(error, item) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    response.sendStatus(200);
-  });
-});
-
-router.delete('/items/:itemId/subitems/:subItemId', function(request, response, next) {
-  var db = new DB();
-  var change = {
-    subItems_remove: [
-      { id: request.param('subItemId') }
-    ]
-  };
-
-  db.updateItem(request.param('itemId'), change, function(error, item) {
-    if (error) {
-      next(error);
-      return;
-    }
-
-    response.sendStatus(200);
   });
 });
 
