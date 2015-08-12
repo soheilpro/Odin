@@ -15,11 +15,85 @@ router.get('/users', function(request, response, next) {
       return;
     }
 
-    response.json({
-      data: users
+    async.each(users, function(user, callback) {
+      expandUser(user, db, callback);
+    }, function(error) {
+      response.json({
+        data: users
+      });
     });
   });
 });
+
+router.post('/users', function(request, response, next) {
+  var user = {
+  };
+
+  if (request.param('name'))
+    user.name = request.param('name');
+
+  var db = new DB();
+
+  db.saveUser(user, function(error, user) {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    expandUser(user, db, function(error) {
+      if (error) {
+        next(error);
+        return;
+      }
+
+      response.json({
+        data: user
+      });
+    });
+  });
+});
+
+router.patch('/users/:userId', function(request, response, next) {
+  var db = new DB();
+
+  db.getUserById(request.param('userId'), function(error, user) {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    if (request.param('name') !== undefined)
+      if (request.param('name'))
+        user.name = request.param('name');
+      else
+        user.name = undefined;
+
+    db.saveUser(user, function(error, user) {
+      if (error) {
+        next(error);
+        return;
+      }
+
+      expandUser(user, db, function(error) {
+        if (error) {
+          next(error);
+          return;
+        }
+
+        response.json({
+          data: user
+        });
+      });
+    });
+  });
+});
+
+function expandUser(user, db, callback) {
+  if (!user.name)
+    user.name = '';
+
+  callback();
+}
 
 router.get('/projects', function(request, response, next) {
   var db = new DB();
@@ -30,11 +104,97 @@ router.get('/projects', function(request, response, next) {
       return;
     }
 
-    response.json({
-      data: projects
+    async.each(projects, function(project, callback) {
+      expandProject(project, db, callback);
+    }, function(error) {
+      response.json({
+        data: projects
+      });
     });
   });
 });
+
+router.post('/projects', function(request, response, next) {
+  var project = {
+  };
+
+  if (request.param('name'))
+    project.name = request.param('name');
+
+  if (request.param('group'))
+    project.group = request.param('group');
+
+  var db = new DB();
+
+  db.saveProject(project, function(error, project) {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    expandProject(project, db, function(error) {
+      if (error) {
+        next(error);
+        return;
+      }
+
+      response.json({
+        data: project
+      });
+    });
+  });
+});
+
+router.patch('/projects/:projectId', function(request, response, next) {
+  var db = new DB();
+
+  db.getProjectById(request.param('projectId'), function(error, project) {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    if (request.param('name') !== undefined)
+      if (request.param('name'))
+        project.name = request.param('name');
+      else
+        project.name = undefined;
+
+    if (request.param('group') !== undefined)
+      if (request.param('group'))
+        project.group = request.param('group');
+      else
+        project.group = undefined;
+
+    db.saveProject(project, function(error, project) {
+      if (error) {
+        next(error);
+        return;
+      }
+
+      expandProject(project, db, function(error) {
+        if (error) {
+          next(error);
+          return;
+        }
+
+        response.json({
+          data: project
+        });
+      });
+    });
+  });
+});
+
+function expandProject(project, db, callback) {
+  if (!project.name)
+    project.name = '';
+
+  if (!project.group)
+    project.group = '';
+
+  callback();
+}
 
 router.get('/states', function(request, response, next) {
   var db = new DB();
@@ -45,11 +205,109 @@ router.get('/states', function(request, response, next) {
       return;
     }
 
-    response.json({
-      data: states
+    async.each(states, function(state, callback) {
+      expandState(state, db, callback);
+    }, function(error) {
+      response.json({
+        data: states
+      });
     });
   });
 });
+
+router.post('/states', function(request, response, next) {
+  var state = {
+  };
+
+  if (request.param('title'))
+    state.title = request.param('title');
+
+  if (request.param('type'))
+    state.type = request.param('type');
+
+  if (request.param('color'))
+    state.color = request.param('color');
+
+  var db = new DB();
+
+  db.saveState(state, function(error, state) {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    expandState(state, db, function(error) {
+      if (error) {
+        next(error);
+        return;
+      }
+
+      response.json({
+        data: state
+      });
+    });
+  });
+});
+
+router.patch('/states/:stateId', function(request, response, next) {
+  var db = new DB();
+
+  db.getStateById(request.param('stateId'), function(error, state) {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    if (request.param('title') !== undefined)
+      if (request.param('title'))
+        state.title = request.param('title');
+      else
+        state.title = undefined;
+
+    if (request.param('type') !== undefined)
+      if (request.param('type'))
+        state.type = request.param('type');
+      else
+        state.type = undefined;
+
+    if (request.param('color') !== undefined)
+      if (request.param('color'))
+        state.color = request.param('color');
+      else
+        state.color = undefined;
+
+    db.saveState(state, function(error, state) {
+      if (error) {
+        next(error);
+        return;
+      }
+
+      expandState(state, db, function(error) {
+        if (error) {
+          next(error);
+          return;
+        }
+
+        response.json({
+          data: state
+        });
+      });
+    });
+  });
+});
+
+function expandState(state, db, callback) {
+  if (!state.title)
+    state.title = '';
+
+  if (!state.type)
+    state.type = '';
+
+  if (!state.color)
+    state.color = '';
+
+  callback();
+}
 
 router.get('/items', function(request, response, next) {
   var db = new DB();

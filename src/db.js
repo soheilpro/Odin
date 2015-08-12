@@ -31,6 +31,20 @@ DB.prototype.getUserById = function(userId, callback) {
   });
 };
 
+DB.prototype.saveUser = function(user, callback) {
+  var document = userToDocument(user);
+
+  this.findAndModify('users', {_id: document._id}, document, {upsert: true, new: true}, function(error, result) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var user = documentToUser(result.value);
+    callback(null, user);
+  });
+};
+
 DB.prototype.getStates = function(callback) {
   this.find('states', null, null, null, function(error, result) {
     if (error) {
@@ -55,6 +69,20 @@ DB.prototype.getStateById = function(stateId, callback) {
   });
 };
 
+DB.prototype.saveState = function(state, callback) {
+  var document = stateToDocument(state);
+
+  this.findAndModify('states', {_id: document._id}, document, {upsert: true, new: true}, function(error, result) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var state = documentToState(result.value);
+    callback(null, state);
+  });
+};
+
 DB.prototype.getProjects = function(callback) {
   this.find('projects', null, null, null, function(error, result) {
     if (error) {
@@ -75,6 +103,20 @@ DB.prototype.getProjectById = function(projectId, callback) {
     }
 
     var project = documentToProject(result);
+    callback(null, project);
+  });
+};
+
+DB.prototype.saveProject = function(project, callback) {
+  var document = projectToDocument(project);
+
+  this.findAndModify('projects', {_id: document._id}, document, {upsert: true, new: true}, function(error, result) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var project = documentToProject(result.value);
     callback(null, project);
   });
 };
@@ -281,6 +323,13 @@ function documentToUser(document) {
   };
 }
 
+function userToDocument(user) {
+  return {
+    _id: mongodb.ObjectId(user.id),
+    name: user.name
+  };
+}
+
 function documentToState(document) {
   return {
     id: document._id.toString(),
@@ -290,11 +339,28 @@ function documentToState(document) {
   };
 }
 
+function stateToDocument(state) {
+  return {
+    _id: mongodb.ObjectId(state.id),
+    title: state.title,
+    type: state.type,
+    color: state.color
+  };
+}
+
 function documentToProject(document) {
   return {
     id: document._id.toString(),
     name: document.name,
     group: document.group
+  };
+}
+
+function projectToDocument(project) {
+  return {
+    _id: mongodb.ObjectId(project.id),
+    name: project.name,
+    group: project.group
   };
 }
 
